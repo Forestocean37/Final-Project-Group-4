@@ -1,7 +1,17 @@
 <resources>
     <string name="app_name">Final-Project-Group-4</string>
+    <!-- Navigation -->
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_tasks">Tasks</string>
     <string name="title_ai">Gen AI</string>
+    <!-- Home Page -->
+    <string name="home_btn_personal">Personal</string>
+    <string name="home_btn_social">Social</string>
+    <string name="home_text_hello">Hello User: Tommy</string>
+    <string name="home_text_title_1">You\'ve got</string>
+    <string name="home_text_title_2">0 tasks today</string>
+    <string name="home_text_options">Options</string>
+    <string name="home_text_schedule_1">Your Schedule</string>
+    <string name="home_text_schedule_2">Upcoming schedule and task</string>
 </resources>
