@@ -3,10 +3,13 @@ package edu.neu.final_project_group_4.ui.tasks;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import edu.neu.final_project_group_4.R;
 
@@ -61,6 +64,19 @@ public class AddTaskFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_task, container, false);
+        //return inflater.inflate(R.layout.fragment_add_task, container, false);
+        View root = inflater.inflate(R.layout.fragment_add_task, container, false); // Replace with your layout name
+
+        // Set initials dynamically if needed
+        TextView profileBtn = root.findViewById(R.id.profileBtn);
+//        circleButton.setText(getUserInitials()); // Replace this with the actual method to get initials
+
+        // Set click listener to navigate to another fragment
+        profileBtn.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.navigation_dashboard);
+        });
+
+        return root;
     }
 }

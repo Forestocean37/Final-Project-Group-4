@@ -9,7 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.databinding.FragmentDashboardBinding;
 
 public class DashboardFragment extends Fragment {
@@ -23,9 +26,12 @@ public class DashboardFragment extends Fragment {
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        // Set up click listener for the add_task_button, would jump to add task fragment
+        binding.addTaskButton.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.addTaskFragment); // Navigate to AddTaskFragment directly by ID
+        });
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

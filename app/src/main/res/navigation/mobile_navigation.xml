@@ -15,7 +15,14 @@
         android:id="@+id/navigation_tasks"
         android:name="edu.neu.final_project_group_4.ui.tasks.TasksFragment"
         android:label="@string/title_tasks"
-        tools:layout="@layout/fragment_tasks" />
+        tools:layout="@layout/fragment_tasks">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addTaskFragment"
+        android:name="edu.neu.final_project_group_4.ui.tasks.AddTaskFragment"
+        android:label="Add Task" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
