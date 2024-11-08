@@ -14,4 +14,6 @@
     <string name="home_text_options">Options</string>
     <string name="home_text_schedule_1">Your Schedule</string>
     <string name="home_text_schedule_2">Upcoming schedule and task</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

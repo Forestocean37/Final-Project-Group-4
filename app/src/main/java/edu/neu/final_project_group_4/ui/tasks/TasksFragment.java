@@ -12,6 +12,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,9 +57,9 @@ public class TasksFragment extends Fragment {
 
         // "Add Task" button to add new tasks
         root.findViewById(R.id.add_task_button).setOnClickListener(v -> {
-            // Display a Toast or launch a new activity/fragment for adding tasks
-            Toast.makeText(getContext(), "Add Task button clicked!", Toast.LENGTH_SHORT).show();
-            // Implement actual add task logic or navigation here
+            //jump to add Task fragment
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.addTaskFragment);
         });
 
         // Listener for calendar date selection
