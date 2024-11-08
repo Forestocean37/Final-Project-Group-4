@@ -13,4 +13,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="main_theme">#FF42A976</color>
     <color name="bar">#FFF8F8F8</color>
+
+    <color name="color1">#FF51B6F4</color>
+    <color name="color2">#FD9F40</color>
+    <color name="color3">#7E85FD</color>
 </resources>
