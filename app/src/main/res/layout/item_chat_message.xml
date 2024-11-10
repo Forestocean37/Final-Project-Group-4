@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="4dp">
+
+    <!-- AI Message Layout -->
+    <LinearLayout
+        android:id="@+id/aiMessageLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/aiIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="bottom"
+            android:src="@drawable/ic_ai"/>
+
+        <TextView
+            android:id="@+id/aiMessageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/message_background_ai"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:maxWidth="240dp"
+            android:textColor="@android:color/black"/>
+    </LinearLayout>
+
+    <!-- User Message Layout -->
+    <LinearLayout
+        android:id="@+id/userMessageLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/userMessageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/message_background_user"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:maxWidth="240dp"
+            android:textColor="@android:color/white"/>
+
+        <ImageView
+            android:id="@+id/userIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="bottom"
+            android:src="@drawable/ic_user__background"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

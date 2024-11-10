@@ -17,4 +17,9 @@
     <color name="color1">#FF51B6F4</color>
     <color name="color2">#FD9F40</color>
     <color name="color3">#7E85FD</color>
+
+    <color name="primaryColor">#6200EE</color> <!-- Purple shade -->
+    <color name="primaryColorDark">#3700B3</color> <!-- Darker shade -->
+    <color name="primaryTextColor">#FFFFFF</color> <!-- White text -->
+
 </resources>
