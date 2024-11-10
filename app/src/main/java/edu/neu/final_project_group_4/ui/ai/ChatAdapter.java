@@ -35,19 +35,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         String message = messages.get(position);
 
-        // Determine if the message is from the AI or the user
         if (message.startsWith("User:")) {
-            // Show user message layout
             holder.userMessageLayout.setVisibility(View.VISIBLE);
             holder.aiMessageLayout.setVisibility(View.GONE);
-            holder.userMessageTextView.setText(message.substring(6)); // Remove "User: " prefix
+            holder.userMessageTextView.setText(message.substring(6));
         } else if (message.startsWith("AI:")) {
-            // Show AI message layout
             holder.aiMessageLayout.setVisibility(View.VISIBLE);
             holder.userMessageLayout.setVisibility(View.GONE);
-            holder.aiMessageTextView.setText(message.substring(4)); // Remove "AI: " prefix
+            holder.aiMessageTextView.setText(message.substring(4));
         }
     }
+
 
     @Override
     public int getItemCount() {
