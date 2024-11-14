@@ -20,6 +20,8 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.neu.final_project_group_4.utils.User;
+
 public class LoginActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
@@ -64,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
             // Signed in
+            User.getInstance().fetchCurrentUser();
             goToMainActivity();
         } else {
             // Failed

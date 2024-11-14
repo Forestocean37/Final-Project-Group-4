@@ -5,17 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.databinding.FragmentHomeBinding;
-import edu.neu.final_project_group_4.utils.Auth;
+import edu.neu.final_project_group_4.utils.User;
 
 public class HomeFragment extends Fragment {
 
@@ -36,7 +33,6 @@ public class HomeFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putString("task_type", "Personal");
             Navigation.findNavController(v).navigate(R.id.navigation_tasks, bundle);
-            Auth.signOut(getActivity());
         });
 
         binding.buttonSocial.setOnClickListener(v -> {
@@ -44,6 +40,9 @@ public class HomeFragment extends Fragment {
             bundle.putString("task_type", "Social");
             Navigation.findNavController(v).navigate(R.id.navigation_tasks, bundle);
         });
+
+        String helloText = "Hello User: " + User.getInstance().getFullName();
+        binding.textHelloUser.setText(helloText);
 
         return root;
     }
