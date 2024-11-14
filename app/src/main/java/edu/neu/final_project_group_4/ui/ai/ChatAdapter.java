@@ -21,8 +21,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     public void setMessages(List<String> newMessages) {
         this.messages = newMessages != null ? newMessages : new ArrayList<>();
-        notifyDataSetChanged();
+        notifyItemInserted(messages.size() - 1); // Only notify the newly added item
     }
+
 
     @NonNull
     @Override
