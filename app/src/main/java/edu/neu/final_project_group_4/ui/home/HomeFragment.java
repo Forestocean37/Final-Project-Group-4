@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.databinding.FragmentHomeBinding;
 import edu.neu.final_project_group_4.models.TaskModel;
@@ -44,27 +46,7 @@ public class HomeFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.navigation_tasks, bundle);
         });
 
-        String helloText = "Hello User: " + User.getInstance().getFullName();
-        binding.textHelloUser.setText(helloText);
-
-        Task.getInstance().fetchTasks(() -> {
-            String taskNum = Task.getInstance().getTasksToday() + " tasks today";
-            binding.textTitle2.setText(taskNum);
-
-            // Temporary using string. Will be changed to a component (task card)
-            TaskModel nextTask = Task.getInstance().getNextTask();
-            String people = nextTask.getPeople().size() > 1
-                    ? nextTask.getPeople().get(0) + "..."
-                    : nextTask.getPeople().get(0);
-            String location = nextTask.getLocation().getType().equals("Offline")
-                    ? nextTask.getLocation().getAddress()
-                    : nextTask.getLocation().getType();
-
-            String nextTaskText = String.format("%s\nDescription: %.20s\n%s\n%s\n%s",
-                    nextTask.getTitle(), nextTask.getDescription(),
-                    nextTask.getStartTime().split(" ")[1], people, location);
-            binding.textUpcomingTemp.setText(nextTaskText);
-        });
+        renderContents();
 
         return root;
     }
@@ -78,6 +60,36 @@ public class HomeFragment extends Fragment {
         Task.getInstance().addNewTask(task);
     }
 */
+
+    private void renderContents() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String helloText = "Hello User: " + User.getInstance().getFullName();
+            binding.textHelloUser.setText(helloText);
+
+            Task.getInstance().fetchTasks(() -> {
+                if (Task.getInstance().getTaskList().isEmpty()) {
+                    return;
+                }
+
+                String taskNum = Task.getInstance().getTasksToday() + " tasks today";
+                binding.textTitle2.setText(taskNum);
+
+                // Temporary using string. Will be changed to a component (task card)
+                TaskModel nextTask = Task.getInstance().getNextTask();
+                String people = nextTask.getPeople().size() > 1
+                        ? nextTask.getPeople().get(0) + "..."
+                        : nextTask.getPeople().get(0);
+                String location = nextTask.getLocation().getType().equals("Offline")
+                        ? nextTask.getLocation().getAddress()
+                        : nextTask.getLocation().getType();
+
+                String nextTaskText = String.format("%s\nDescription: %.20s\n%s\n%s\n%s",
+                        nextTask.getTitle(), nextTask.getDescription(),
+                        nextTask.getStartTime().split(" ")[1], people, location);
+                binding.textUpcomingTemp.setText(nextTaskText);
+            });
+        }
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
