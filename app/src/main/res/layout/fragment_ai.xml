@@ -1,22 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.ai.AiFragment">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_ai"
+    <!-- Ask GenAI Button -->
+    <Button
+        android:id="@+id/buttonAskGenAi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ask GenAI"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Menu Button (Collapsed Initially) -->
+    <LinearLayout
+        android:id="@+id/collapsedMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:background="?attr/selectableItemBackground"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/buttonAskGenAi"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_menu"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Menu"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- Expanded Menu with 3 Buttons -->
+    <LinearLayout
+        android:id="@+id/expandedMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/collapsedMenu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Summarize Button -->
+        <Button
+            android:id="@+id/buttonSummarize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Summarize"
+            android:visibility="gone"/>
+
+        <!-- Reschedule Button -->
+        <Button
+            android:id="@+id/buttonReschedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reschedule"
+            android:visibility="gone"/>
+
+        <!-- Suggest Button -->
+        <Button
+            android:id="@+id/buttonSuggest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Suggest"
+            android:visibility="gone"/>
+
+
+        <!-- Add new buttons -->
+
+        <Button
+            android:id="@+id/buttonPrioritize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Prioritize"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/buttonViewInsights"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Insights"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/buttonBreakDownTask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Break Down Task"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/buttonAdjustDeadlines"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Adjust Deadlines"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/buttonReviewTasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Review Tasks"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <!-- ScrollView for additional options (e.g., Daily/Weekly/Monthly for Summarize or Suggest) -->
+    <ScrollView
+        android:id="@+id/scrollViewOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/expandedMenu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Content inside ScrollView -->
+        <LinearLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Buttons for Summarize (Daily, Weekly, Monthly) -->
+            <Button
+                android:id="@+id/buttonSummarizeDaily"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Daily"
+                android:visibility="gone"/>
+            <Button
+                android:id="@+id/buttonSummarizeWeekly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weekly"
+                android:visibility="gone"/>
+            <Button
+                android:id="@+id/buttonSummarizeMonthly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Monthly"
+                android:visibility="gone"/>
+
+            <!-- Buttons for Reschedule (Date Picker) -->
+            <Button
+                android:id="@+id/buttonSelectDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Date"
+                android:visibility="gone"/>
+
+            <!-- Additional buttons for task reschedule confirmation -->
+            <Button
+                android:id="@+id/buttonConfirmReschedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Confirm Reschedule"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- RecyclerView for Chat Responses -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewResponses"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="always"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintTop_toBottomOf="@id/scrollViewOptions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
