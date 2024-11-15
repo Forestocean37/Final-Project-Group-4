@@ -1,5 +1,6 @@
 package edu.neu.final_project_group_4.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskModel {
@@ -13,6 +14,12 @@ public class TaskModel {
     private String taskId;
 
     public TaskModel() {
+        this.title = "NULL";
+        this.type = "UNKNOWN";
+        this.description = "...";
+        this.startTime = "NULL NULL";
+        this.people = new ArrayList<>();
+        this.location = new LocationModel("NULL", "NULL");
     }
 
     public TaskModel(String title, String type, String description, String startTime, List<String> people, LocationModel location) {
@@ -26,6 +33,8 @@ public class TaskModel {
 
     public TaskModel(String title, String type, String startTime, List<String> people, LocationModel location) {
         this.title = title;
+        this.type = type;
+        this.description = "...";
         this.startTime = startTime;
         this.people = people;
         this.location = location;
@@ -33,14 +42,19 @@ public class TaskModel {
 
     public TaskModel(String title, String type, String description, String startTime, LocationModel location) {
         this.title = title;
+        this.type = type;
         this.description = description;
         this.startTime = startTime;
+        this.people = new ArrayList<>();
         this.location = location;
     }
 
     public TaskModel(String title, String type, String startTime, LocationModel location) {
         this.title = title;
+        this.type = type;
+        this.description = "...";
         this.startTime = startTime;
+        this.people = new ArrayList<>();
         this.location = location;
     }
 

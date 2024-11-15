@@ -76,9 +76,14 @@ public class HomeFragment extends Fragment {
 
                 // Temporary using string. Will be changed to a component (task card)
                 TaskModel nextTask = Task.getInstance().getNextTask();
-                String people = nextTask.getPeople().size() > 1
-                        ? nextTask.getPeople().get(0) + "..."
-                        : nextTask.getPeople().get(0);
+                String people;
+                if (nextTask.getPeople().size() > 1) {
+                    people = nextTask.getPeople().get(0) + "...";
+                } else if (nextTask.getPeople().size() == 1) {
+                    people = nextTask.getPeople().get(0);
+                } else {
+                    people = "NULL";
+                }
                 String location = nextTask.getLocation().getType().equals("Offline")
                         ? nextTask.getLocation().getAddress()
                         : nextTask.getLocation().getType();
