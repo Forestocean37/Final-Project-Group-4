@@ -22,4 +22,11 @@
     <color name="primaryColorDark">#3700B3</color> <!-- Darker shade -->
     <color name="primaryTextColor">#FFFFFF</color> <!-- White text -->
 
+    <color name="personal_task">#36C692</color>
+    <color name="free_task">#FF6D6D</color>
+    <color name="social_task">#F481E1</color>
+    <color name="work_task">#FFD382</color>
+    <color name="to_do_task">#8895FF</color>
+    <color name="btn_selected">#D0D0D0</color>
+
 </resources>
