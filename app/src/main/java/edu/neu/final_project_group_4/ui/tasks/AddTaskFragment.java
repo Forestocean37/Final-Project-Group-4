@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,18 +25,25 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import edu.neu.final_project_group_4.R;
+import edu.neu.final_project_group_4.models.LocationModel;
+import edu.neu.final_project_group_4.models.TaskModel;
+import edu.neu.final_project_group_4.utils.Task;
 import edu.neu.final_project_group_4.utils.User;
 
 
 public class AddTaskFragment extends Fragment {
+
+    Task taskAPI = Task.getInstance();
 
     private TextView profileBtn, tvDate, tvTime, tvGreeting;
     private ImageButton btnDatePicker, btnTimePicker;
     private ArrayList<Button> buttons;
     private HashMap<Button, Integer> buttonColors; // Store original colors for each button
     private Button btnAddTask;
+    private TextInputEditText taskDetailInput, taskTitleInput, locationInput;
 
     // the task data need to create
     private String type;
@@ -109,8 +117,20 @@ public class AddTaskFragment extends Fragment {
         btnAddTask.setOnClickListener(v -> {
 //            Toast.makeText(requireContext(), "Type: " + startTime, Toast.LENGTH_SHORT).show();
             if(validateInputs(root)){
-                //TODO CREATE A TASK
-                Toast.makeText(requireContext(), "success", Toast.LENGTH_SHORT).show();
+                //create a task
+                title = taskTitleInput.getText().toString();
+                detail = taskDetailInput.getText().toString();
+                location = locationInput.getText().toString();
+                List<String> people = new ArrayList<>();
+                people.add(User.getInstance().getEmail());
+                LocationModel newLocation = new LocationModel(location, location);
+                TaskModel newTask = new TaskModel(title,type,detail,startTime,people,newLocation);
+//                Log.e("PEOPLE", newTask.toString());
+                taskAPI.addNewTask(newTask);
+                Toast.makeText(requireContext(), "successfully add task", Toast.LENGTH_SHORT).show();
+                NavController navController = Navigation.findNavController(v);
+                navController.navigate(R.id.navigation_home);
+
             }else{
                 Toast.makeText(requireContext(), "Type: please fill out all the blank", Toast.LENGTH_SHORT).show();
             }
@@ -122,9 +142,9 @@ public class AddTaskFragment extends Fragment {
 
     private boolean validateInputs(View root) {
         // Get references to the input fields
-        TextInputEditText taskDetailInput = root.findViewById(R.id.taskDetailInput);
-        TextInputEditText taskTitleInput = root.findViewById(R.id.taskTitleInput);
-        TextInputEditText locationInput = root.findViewById(R.id.locationInput);
+        taskDetailInput = root.findViewById(R.id.taskDetailInput);
+        taskTitleInput = root.findViewById(R.id.taskTitleInput);
+        locationInput = root.findViewById(R.id.locationInput);
 
         // Check if taskDetailInput is empty
         if (taskDetailInput.getText() == null || taskDetailInput.getText().toString().trim().isEmpty()) {
