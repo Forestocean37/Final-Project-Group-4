@@ -19,18 +19,31 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import edu.neu.final_project_group_4.R;
+import edu.neu.final_project_group_4.models.TaskModel;
+import edu.neu.final_project_group_4.utils.Task;
 
 public class TasksFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private TasksAdapter tasksAdapter;
-    private List<Task> dailyTasks;
     private CalendarView calendarView;
     private boolean isDetailedView = false;  // Track view state
+    private List<TaskModel> taskList;
+    // this is use to filter the task for a specific date. default value is today
+    private List<TaskModel> todayTasks = new ArrayList<>();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+    String selectedDate = dateFormat.format(new Date());
 
     @Nullable
     @Override
@@ -47,9 +60,15 @@ public class TasksFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recycler_view_daily_tasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        dailyTasks = new ArrayList<>();
-        tasksAdapter = new TasksAdapter(dailyTasks);
-        recyclerView.setAdapter(tasksAdapter);
+        //get the task data from firebase
+        Task.getInstance().fetchTasks(()->{
+            taskList = Task.getInstance().getTaskList();
+            getTodayTasks(taskList,selectedDate);
+            tasksAdapter = new TasksAdapter(todayTasks);
+            recyclerView.setAdapter(tasksAdapter);
+        });
+
+
 
         // Toggle button to switch views
         Button toggleViewButton = root.findViewById(R.id.toggle_view_button);
@@ -64,7 +83,12 @@ public class TasksFragment extends Fragment {
 
         // Listener for calendar date selection
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            String selectedDate = (month + 1) + "/" + dayOfMonth + "/" + year;
+            // Format selected date to "dd-MM-yyyy"
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, dayOfMonth);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            selectedDate = dateFormat.format(calendar.getTime()); // Update selectedDate
+            //would cause change in todayTasks
             updateDailyTasks(selectedDate);
         });
 
@@ -82,26 +106,50 @@ public class TasksFragment extends Fragment {
         }
     }
 
+    // Function to filter today's tasks
+    private List<TaskModel> getTodayTasks(List<TaskModel> allTasks, String selectedDate) {
+        todayTasks.clear(); // in case there are
+
+        // Loop through tasks to find today's tasks
+        for (TaskModel task : allTasks) {
+            String startTime = task.getStartTime();
+
+            // Extract date part from startTime
+            if (startTime != null && !startTime.isEmpty()) {
+                try {
+                    Date taskDate = dateFormat.parse(startTime.split(" ")[0]); // Only date part (dd-MM-yyyy)
+                    String taskDateString = dateFormat.format(taskDate);
+
+                    // Compare with today's date
+                    if (selectedDate.equals(taskDateString)) {
+                        todayTasks.add(task); // Add to today's tasks list
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return todayTasks;
+    }
+
+
     private void updateDailyTasks(String selectedDate) {
-        dailyTasks.clear();
-        dailyTasks.add(new Task("9:00 AM", "Task 1", "Task details for Task 1", "Address: Location A"));
-        dailyTasks.add(new Task("11:00 AM", "Task 2", "Task details for Task 2", "Address: Location B"));
-        dailyTasks.add(new Task("2:00 PM", "Task 3", "Task details for Task 3", "Address: Location C"));
+        //update to the new date task
+        getTodayTasks(taskList,selectedDate);
         tasksAdapter.notifyDataSetChanged();
     }
 
     private void updateDailyTasksWithTime(String selectedDate) {
-        dailyTasks.clear();
-        dailyTasks.add(new Task("9:00 AM", "Task A", "Details for Task A", "Address: Location X"));
-        dailyTasks.add(new Task("11:00 AM", "Task B", "Details for Task B", "Address: Location Y"));
-        dailyTasks.add(new Task("2:00 PM", "Task C", "Details for Task C", "Address: Location Z"));
+//        dailyTasks.add(new Task("9:00 AM", "Task A", "Details for Task A", "Address: Location X"));
+//        dailyTasks.add(new Task("11:00 AM", "Task B", "Details for Task B", "Address: Location Y"));
+//        dailyTasks.add(new Task("2:00 PM", "Task C", "Details for Task C", "Address: Location Z"));
         tasksAdapter.notifyDataSetChanged();
     }
 
     private static class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
-        private final List<Task> tasks;
+        private final List<TaskModel> tasks;
 
-        TasksAdapter(List<Task> tasks) {
+        TasksAdapter(List<TaskModel> tasks) {
             this.tasks = tasks;
         }
 
@@ -114,11 +162,11 @@ public class TasksFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-            Task task = tasks.get(position);
-            holder.taskTime.setText(task.getTime());
+            TaskModel task = tasks.get(position);
+            holder.taskTime.setText(task.getStartTime());
             holder.taskTitle.setText(task.getTitle());
-            holder.taskDetails.setText(task.getDetails());
-            holder.taskAddress.setText(task.getAddress());
+            holder.taskDetails.setText(task.getDescription());
+            holder.taskAddress.setText(task.getLocation().getAddress());
         }
 
         @Override
@@ -139,34 +187,34 @@ public class TasksFragment extends Fragment {
         }
     }
 
-    // Task data model
-    private static class Task {
-        private final String time;
-        private final String title;
-        private final String details;
-        private final String address;
-
-        public Task(String time, String title, String details, String address) {
-            this.time = time;
-            this.title = title;
-            this.details = details;
-            this.address = address;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getDetails() {
-            return details;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-    }
+//    // Task data model
+//    private static class Task {
+//        private final String time;
+//        private final String title;
+//        private final String details;
+//        private final String address;
+//
+//        public Task(String time, String title, String details, String address) {
+//            this.time = time;
+//            this.title = title;
+//            this.details = details;
+//            this.address = address;
+//        }
+//
+//        public String getTime() {
+//            return time;
+//        }
+//
+//        public String getTitle() {
+//            return title;
+//        }
+//
+//        public String getDetails() {
+//            return details;
+//        }
+//
+//        public String getAddress() {
+//            return address;
+//        }
+//    }
 }
