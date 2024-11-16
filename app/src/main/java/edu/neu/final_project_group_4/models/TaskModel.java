@@ -1,9 +1,14 @@
 package edu.neu.final_project_group_4.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskModel {
+public class TaskModel implements Parcelable {
     private String title;
     private String type;
     private String description;
@@ -112,5 +117,59 @@ public class TaskModel {
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "TaskModel{" +
+                "title='" + title + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", people=" + people +
+                ", location=" + location +  // Calls the toString() method of LocationModel
+                ", taskId='" + taskId + '\'' +
+                '}';
+    }
+
+    // Parcelable implementation
+
+    protected TaskModel(Parcel in) {
+        title = in.readString();
+        type = in.readString();
+        description = in.readString();
+        startTime = in.readString();
+        people = in.createStringArrayList(); // Read list of strings
+        location = in.readParcelable(LocationModel.class.getClassLoader()); // Read Parcelable LocationModel
+        taskId = in.readString();
+    }
+
+    public static final Creator<TaskModel> CREATOR = new Creator<TaskModel>() {
+        @Override
+        public TaskModel createFromParcel(Parcel in) {
+            return new TaskModel(in);
+        }
+
+        @Override
+        public TaskModel[] newArray(int size) {
+            return new TaskModel[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(type);
+        dest.writeString(description);
+        dest.writeString(startTime);
+        dest.writeStringList(people); // Write list of strings
+        dest.writeParcelable(location, flags); // Write Parcelable LocationModel
+        dest.writeString(taskId);
     }
 }

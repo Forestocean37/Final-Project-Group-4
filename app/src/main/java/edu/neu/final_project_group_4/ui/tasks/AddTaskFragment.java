@@ -38,7 +38,7 @@ public class AddTaskFragment extends Fragment {
 
     Task taskAPI = Task.getInstance();
 
-    private TextView profileBtn, tvDate, tvTime, tvGreeting;
+    private TextView profileBtn, tvDate, tvTime, tvGreeting,tvAddTask;
     private ImageButton btnDatePicker, btnTimePicker;
     private ArrayList<Button> buttons;
     private HashMap<Button, Integer> buttonColors; // Store original colors for each button
@@ -63,6 +63,10 @@ public class AddTaskFragment extends Fragment {
 
         tvDate = root.findViewById(R.id.tvDate);
         tvTime = root.findViewById(R.id.tvTime);
+        tvAddTask = root.findViewById(R.id.tvAddTask);
+        taskDetailInput = root.findViewById(R.id.taskDetailInput);
+        taskTitleInput = root.findViewById(R.id.taskTitleInput);
+        locationInput = root.findViewById(R.id.locationInput);
         btnDatePicker = root.findViewById(R.id.btnDatePicker);
         btnTimePicker = root.findViewById(R.id.btnTimePicker);
         // Handle date picker
@@ -125,9 +129,16 @@ public class AddTaskFragment extends Fragment {
                 people.add(User.getInstance().getEmail());
                 LocationModel newLocation = new LocationModel(location, location);
                 TaskModel newTask = new TaskModel(title,type,detail,startTime,people,newLocation);
-//                Log.e("PEOPLE", newTask.toString());
-                taskAPI.addNewTask(newTask);
-                Toast.makeText(requireContext(), "successfully add task", Toast.LENGTH_SHORT).show();
+
+                //checn if it is a create task or edit task
+                if (getArguments() != null && getArguments().containsKey("task")){
+                    TaskModel oldTask = getArguments().getParcelable("task");
+                    taskAPI.updateTask(oldTask.getTaskId(),newTask);
+                    Toast.makeText(requireContext(), "successfully Edit task", Toast.LENGTH_SHORT).show();
+                }else{
+                    taskAPI.addNewTask(newTask);
+                    Toast.makeText(requireContext(), "successfully Add task", Toast.LENGTH_SHORT).show();
+                }
                 NavController navController = Navigation.findNavController(v);
                 navController.navigate(R.id.navigation_home);
 
@@ -137,15 +148,65 @@ public class AddTaskFragment extends Fragment {
 
         });
 
+        // Check if task data is passed in the arguments
+        if (getArguments() != null && getArguments().containsKey("task")) {
+            TaskModel task = getArguments().getParcelable("task");
+            if (task != null) {
+                // Task data is available - set up the fragment for editing
+//                Toast.makeText(requireContext(), "Edit part", Toast.LENGTH_SHORT).show();
+//                Log.e("Task Model", task.toString());
+                resetTaskUI(task);
+            }
+        } else {
+            // No task data - set up the fragment for creating a new task
+            Toast.makeText(requireContext(), "other part", Toast.LENGTH_SHORT).show();
+        }
+
         return root;
     }
 
-    private boolean validateInputs(View root) {
-        // Get references to the input fields
-        taskDetailInput = root.findViewById(R.id.taskDetailInput);
-        taskTitleInput = root.findViewById(R.id.taskTitleInput);
-        locationInput = root.findViewById(R.id.locationInput);
+    private void resetTaskUI(TaskModel task) {
+        btnAddTask.setText("Edit Task");
+        tvAddTask.setText("Edit a Task");
 
+        // Set the tvDate text from the task's startTime (split by space)
+        if (task.getStartTime() != null && !task.getStartTime().isEmpty()) {
+            String[] dateTime = task.getStartTime().split(" ");
+            if (dateTime.length == 2) {
+                tvDate.setText(dateTime[0]); // Set the date part
+                tvTime.setText(dateTime[1]); // Set the time part
+            }
+            startTime = task.getStartTime();
+        }
+
+        // Set buttons' colors according to the task type
+        String taskType = task.getType(); // Convert to uppercase
+        for (Button button : buttons) {
+            String buttonText = button.getText().toString(); // Get button text
+            if (buttonText.equalsIgnoreCase(taskType)) {
+                // Set the color to selected for the matching button
+                button.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.btn_selected));
+                type = task.getType();
+            }
+        }
+
+        // Set taskDetailInput text from the task's description
+        if (task.getDescription() != null) {
+            taskDetailInput.setText(task.getDescription());
+        }
+
+        // Set taskTitleInput text from the task's title
+        if (task.getTitle() != null) {
+            taskTitleInput.setText(task.getTitle());
+        }
+
+        // Set locationInput text from the task's location address
+        if (task.getLocation() != null && task.getLocation().getAddress() != null) {
+            locationInput.setText(task.getLocation().getAddress());
+        }
+    }
+
+    private boolean validateInputs(View root) {
         // Check if taskDetailInput is empty
         if (taskDetailInput.getText() == null || taskDetailInput.getText().toString().trim().isEmpty()) {
             taskDetailInput.setError("Task detail cannot be empty");

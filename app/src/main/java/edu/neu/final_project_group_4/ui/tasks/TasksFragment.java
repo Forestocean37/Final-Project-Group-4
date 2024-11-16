@@ -56,7 +56,7 @@ public class TasksFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_tasks, container, false);
-
+        Toast.makeText(requireContext(), selectedDate, Toast.LENGTH_SHORT).show();
         if (getArguments() != null) {
             String taskType = getArguments().getString("task_type", "No Task Type");
             TextView textView = root.findViewById(R.id.text_task_type);
@@ -87,6 +87,8 @@ public class TasksFragment extends Fragment {
             //jump to add Task fragment
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.addTaskFragment);
+            //you have reset date so next time jump to this fragment would be the latest date
+            selectedDate = dateFormat.format(new Date());
         });
 
         // Listener for calendar date selection
@@ -186,7 +188,17 @@ public class TasksFragment extends Fragment {
             boolean isOutdated = isTaskOutdated(task.getStartTime());
 
             //click event of our button
-//            holder.btnEditTask.setOnClickListener(...);
+            holder.btnEditTask.setOnClickListener(v -> {
+                // Create a Bundle and pass the task as an argument
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("task", task); // Ensure TaskModel implements Parcelable
+
+                // Navigate to AddTaskFragment with the bundle
+                NavController navController = Navigation.findNavController(v);
+                navController.navigate(R.id.addTaskFragment, bundle);
+                //you have reset date so next time jump to this fragment would be the latest date
+                selectedDate = dateFormat.format(new Date());
+            });
             holder.btnDeleteTask.setOnClickListener(v -> {
                 // Create and show the delete confirmation dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext());

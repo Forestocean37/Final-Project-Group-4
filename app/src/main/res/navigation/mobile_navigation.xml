@@ -22,7 +22,11 @@
     <fragment
         android:id="@+id/addTaskFragment"
         android:name="edu.neu.final_project_group_4.ui.tasks.AddTaskFragment"
-        android:label="Add Task" />
+        android:label="Add Task">
+        <argument
+            android:name="task"
+            app:argType="edu.neu.final_project_group_4.models.TaskModel" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
