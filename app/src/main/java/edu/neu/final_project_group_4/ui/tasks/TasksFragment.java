@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -38,16 +40,17 @@ import edu.neu.final_project_group_4.utils.Task;
 
 public class TasksFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private TasksAdapter tasksAdapter;
+    static Task taskAPI = Task.getInstance();
+    private static RecyclerView recyclerView;
+    private static TasksAdapter tasksAdapter;
     private CalendarView calendarView;
     private TextView tv_no_task;
     private boolean isDetailedView = false;  // Track view state
-    private List<TaskModel> taskList;
+    private static List<TaskModel> taskList;
     // this is use to filter the task for a specific date. default value is today
-    private List<TaskModel> todayTasks = new ArrayList<>();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-    String selectedDate = dateFormat.format(new Date());
+    private static List<TaskModel> todayTasks = new ArrayList<>();
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+    static String selectedDate = dateFormat.format(new Date());
 
     @Nullable
     @Override
@@ -66,7 +69,7 @@ public class TasksFragment extends Fragment {
         tv_no_task = root.findViewById(R.id.no_task);
 
         //get the task data from firebase
-        Task.getInstance().fetchTasks(()->{
+        taskAPI.fetchTasks(()->{
             taskList = Task.getInstance().getTaskList();
             getTodayTasks(taskList,selectedDate);
             tasksAdapter = new TasksAdapter(todayTasks);
@@ -110,7 +113,7 @@ public class TasksFragment extends Fragment {
     }
 
     // Function to filter today's tasks
-    private List<TaskModel> getTodayTasks(List<TaskModel> allTasks, String selectedDate) {
+    private static List<TaskModel> getTodayTasks(List<TaskModel> allTasks, String selectedDate) {
         todayTasks.clear(); // in case there are
 
         // Loop through tasks to find today's tasks
@@ -182,6 +185,35 @@ public class TasksFragment extends Fragment {
             // Determine if the task is outdated
             boolean isOutdated = isTaskOutdated(task.getStartTime());
 
+            //click event of our button
+//            holder.btnEditTask.setOnClickListener(...);
+            holder.btnDeleteTask.setOnClickListener(v -> {
+                // Create and show the delete confirmation dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext());
+                builder.setTitle("Confirm Delete")
+                        .setMessage("Are you sure you want to delete this task?")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            // Handle the delete operation here
+                            taskAPI.deleteTask(task);
+
+                            //fetch the latest data again from firebase
+                            taskAPI.fetchTasks(()->{
+                                taskList = Task.getInstance().getTaskList();
+                                getTodayTasks(taskList,selectedDate);
+                                tasksAdapter.notifyDataSetChanged();
+                            });
+                            dialog.dismiss();; // Custom method to delete the task
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                            // Dismiss the dialog
+                            dialog.dismiss();
+                        });
+
+                // Show the dialog
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            });
+
             // Determine background color based on task type
             int backgroundColor;
             if (isOutdated) {
@@ -219,6 +251,7 @@ public class TasksFragment extends Fragment {
 
         static class TaskViewHolder extends RecyclerView.ViewHolder {
             TextView taskType,taskTime, taskTitle, taskDetails, taskAddress;
+            ImageButton btnEditTask, btnDeleteTask;
 
             TaskViewHolder(View itemView) {
                 super(itemView);
@@ -227,6 +260,8 @@ public class TasksFragment extends Fragment {
                 taskTitle = itemView.findViewById(R.id.task_title);
                 taskDetails = itemView.findViewById(R.id.task_details);
                 taskAddress = itemView.findViewById(R.id.task_address);
+                btnEditTask = itemView.findViewById(R.id.btnEditTask);
+                btnDeleteTask = itemView.findViewById(R.id.btnDeleteTask);
             }
         }
     }
