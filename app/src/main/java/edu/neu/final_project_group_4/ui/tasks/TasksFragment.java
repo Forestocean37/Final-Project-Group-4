@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -18,6 +19,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +41,7 @@ public class TasksFragment extends Fragment {
     private RecyclerView recyclerView;
     private TasksAdapter tasksAdapter;
     private CalendarView calendarView;
+    private TextView tv_no_task;
     private boolean isDetailedView = false;  // Track view state
     private List<TaskModel> taskList;
     // this is use to filter the task for a specific date. default value is today
@@ -59,6 +63,7 @@ public class TasksFragment extends Fragment {
         calendarView = root.findViewById(R.id.calendar_view);
         recyclerView = root.findViewById(R.id.recycler_view_daily_tasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        tv_no_task = root.findViewById(R.id.no_task);
 
         //get the task data from firebase
         Task.getInstance().fetchTasks(()->{
@@ -99,10 +104,8 @@ public class TasksFragment extends Fragment {
         isDetailedView = !isDetailedView;
         if (isDetailedView) {
             calendarView.setVisibility(View.GONE);
-            updateDailyTasksWithTime("Sample Date"); // Replace with the actual selected date
         } else {
             calendarView.setVisibility(View.VISIBLE);
-            updateDailyTasks("Selected Date");
         }
     }
 
@@ -136,6 +139,13 @@ public class TasksFragment extends Fragment {
     private void updateDailyTasks(String selectedDate) {
         //update to the new date task
         getTodayTasks(taskList,selectedDate);
+        if(todayTasks.size() == 0){
+            recyclerView.setVisibility(View.INVISIBLE);
+            tv_no_task.setVisibility(View.VISIBLE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            tv_no_task.setVisibility(View.INVISIBLE);
+        }
         tasksAdapter.notifyDataSetChanged();
     }
 
@@ -163,10 +173,43 @@ public class TasksFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
             TaskModel task = tasks.get(position);
+            holder.taskType.setText(task.getType());
             holder.taskTime.setText(task.getStartTime());
             holder.taskTitle.setText(task.getTitle());
             holder.taskDetails.setText(task.getDescription());
             holder.taskAddress.setText(task.getLocation().getAddress());
+
+            // Determine if the task is outdated
+            boolean isOutdated = isTaskOutdated(task.getStartTime());
+
+            // Determine background color based on task type
+            int backgroundColor;
+            if (isOutdated) {
+                backgroundColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.outdated_task);
+            }else{
+                switch (task.getType()) {
+                    case "Personal":
+                        backgroundColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.personal_task);
+                        break;
+                    case "Free":
+                        backgroundColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.free_task);
+                        break;
+                    case "Social":
+                        backgroundColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.social_task);
+                        break;
+                    case "Work":
+                        backgroundColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.work_task);
+                        break;
+                    case "To do list":
+                        backgroundColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.to_do_task);
+                        break;
+                    default:
+                        backgroundColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.white); // Optional: Default color
+                        break;
+                }
+            }
+            // Set the background color of the item
+            holder.itemView.setBackgroundColor(backgroundColor);
         }
 
         @Override
@@ -175,10 +218,11 @@ public class TasksFragment extends Fragment {
         }
 
         static class TaskViewHolder extends RecyclerView.ViewHolder {
-            TextView taskTime, taskTitle, taskDetails, taskAddress;
+            TextView taskType,taskTime, taskTitle, taskDetails, taskAddress;
 
             TaskViewHolder(View itemView) {
                 super(itemView);
+                taskType = itemView.findViewById(R.id.task_type);
                 taskTime = itemView.findViewById(R.id.task_time);
                 taskTitle = itemView.findViewById(R.id.task_title);
                 taskDetails = itemView.findViewById(R.id.task_details);
@@ -187,34 +231,24 @@ public class TasksFragment extends Fragment {
         }
     }
 
-//    // Task data model
-//    private static class Task {
-//        private final String time;
-//        private final String title;
-//        private final String details;
-//        private final String address;
-//
-//        public Task(String time, String title, String details, String address) {
-//            this.time = time;
-//            this.title = title;
-//            this.details = details;
-//            this.address = address;
-//        }
-//
-//        public String getTime() {
-//            return time;
-//        }
-//
-//        public String getTitle() {
-//            return title;
-//        }
-//
-//        public String getDetails() {
-//            return details;
-//        }
-//
-//        public String getAddress() {
-//            return address;
-//        }
-//    }
+    //check the task is outdated, need to render the outdated task to gray
+    private static boolean isTaskOutdated(String startTime) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+
+        try {
+            // Parse task's start time
+            Date taskDate = dateFormat.parse(startTime);
+
+            // Get the current date and time
+            Date currentDate = new Date();
+
+            // Compare task date with the current date
+            return taskDate != null && taskDate.before(currentDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false; // Default to not outdated if parsing fails
+    }
 }
