@@ -20,8 +20,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="9:30 AM"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@android:color/black"
             android:textSize="14sp" />
+
+        <!-- Task type -->
+        <TextView
+            android:id="@+id/task_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task Type"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:background="@drawable/textview_rectangle_border"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp" />
 
         <!-- Task Title -->
         <TextView
@@ -49,22 +62,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/task_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_person" />
+                android:src="@drawable/ic_location" />
 
             <TextView
                 android:id="@+id/task_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Address: xxx"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@android:color/black"
                 android:textSize="14sp"
                 android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:padding="8dp">
+
+            <!-- Edit Button -->
+            <ImageButton
+                android:id="@+id/btnEditTask"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Edit"
+                android:src="@drawable/ic_edit_rounded"
+                android:scaleType="centerInside"
+                android:layout_marginEnd="8dp" />
+
+            <!-- Delete Button -->
+            <ImageButton
+                android:id="@+id/btnDeleteTask"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Delete"
+                android:src="@drawable/ic_delete_rounded"
+                android:scaleType="centerInside" />
         </LinearLayout>
 
     </LinearLayout>

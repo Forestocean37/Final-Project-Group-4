@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 
 import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.databinding.FragmentDashboardBinding;
+import edu.neu.final_project_group_4.utils.Auth;
 
 public class DashboardFragment extends Fragment {
 
@@ -30,6 +31,11 @@ public class DashboardFragment extends Fragment {
         binding.addTaskButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.addTaskFragment); // Navigate to AddTaskFragment directly by ID
+        });
+
+        //sign out
+        binding.signOutButton.setOnClickListener(v -> {
+            Auth.signOut(getContext());
         });
 
         return root;

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.dashboard.DashboardFragment">
+    tools:context=".ui.dashboard.DashboardFragment"
+    android:padding="16dp">
 
     <!-- Date and Task Button -->
     <TextView
@@ -187,67 +188,27 @@
         android:id="@+id/description_text"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         android:text="About yourself\nxxxxxxxxxxxxx\nxxxxxxxxxxxxx\nxxxxxxxxxxxxx"
-        android:textSize="14sp"
         android:textColor="#888888"
-        app:layout_constraintTop_toBottomOf="@id/description_title"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintHeight_default="percent"
         app:layout_constraintHeight_percent="0.2"
-        android:layout_marginTop="4dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description_title" />
 
-    <!-- Bottom Navigation Bar -->
-    <LinearLayout
-        android:id="@+id/bottom_navigation"
+    <Button
+        android:id="@+id/sign_out_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#333333"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        android:text="Sign Out"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#FF0000"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/description_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="8dp">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/home_nav"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Home"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            android:padding="8dp" />
-
-        <TextView
-            android:id="@+id/tasks_nav"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Tasks"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            android:padding="8dp" />
-
-        <TextView
-            android:id="@+id/dashboard_nav"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Dashboard"
-            android:textColor="#69c6b3"
-            android:gravity="center"
-            android:padding="8dp" />
-
-        <TextView
-            android:id="@+id/gen_ai_nav"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Gen AI"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            android:padding="8dp" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
