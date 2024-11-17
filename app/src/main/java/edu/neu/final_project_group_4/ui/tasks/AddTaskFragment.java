@@ -2,8 +2,6 @@ package edu.neu.final_project_group_4.ui.tasks;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -11,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,7 +123,7 @@ public class AddTaskFragment extends Fragment {
                 detail = taskDetailInput.getText().toString();
                 location = locationInput.getText().toString();
                 List<String> people = new ArrayList<>();
-                people.add(User.getInstance().getEmail());
+                people.add(User.getInstance().getFullName());
                 LocationModel newLocation = new LocationModel(location, location);
                 TaskModel newTask = new TaskModel(title,type,detail,startTime,people,newLocation);
 

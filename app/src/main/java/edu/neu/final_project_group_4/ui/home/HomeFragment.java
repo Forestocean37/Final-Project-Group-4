@@ -2,6 +2,7 @@ package edu.neu.final_project_group_4.ui.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.databinding.FragmentHomeBinding;
@@ -67,15 +71,19 @@ public class HomeFragment extends Fragment {
             binding.textHelloUser.setText(helloText);
 
             Task.getInstance().fetchTasks(() -> {
+                String taskNum = Task.getInstance().getTasksToday() + " tasks today";
+                binding.textTitle2.setText(taskNum);
+
                 if (Task.getInstance().getTaskList().isEmpty()) {
                     return;
                 }
 
-                String taskNum = Task.getInstance().getTasksToday() + " tasks today";
-                binding.textTitle2.setText(taskNum);
-
                 // Temporary using string. Will be changed to a component (task card)
                 TaskModel nextTask = Task.getInstance().getNextTask();
+                if (nextTask == null) {
+                    return;
+                }
+
                 String people;
                 if (nextTask.getPeople().size() > 1) {
                     people = nextTask.getPeople().get(0) + "...";
@@ -87,10 +95,14 @@ public class HomeFragment extends Fragment {
                 String location = nextTask.getLocation().getType().equals("Offline")
                         ? nextTask.getLocation().getAddress()
                         : nextTask.getLocation().getType();
+                LocalDateTime dateTime = LocalDateTime.parse(nextTask.getStartTime(),
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+                String startTime = dateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy h:mm a"));
 
                 String nextTaskText = String.format("%s\nDescription: %.20s\n%s\n%s\n%s",
-                        nextTask.getTitle(), nextTask.getDescription(),
-                        nextTask.getStartTime().split(" ")[1], people, location);
+                        nextTask.getTitle(),
+                        nextTask.getDescription().replace("\n", " "),
+                        startTime, people, location);
                 binding.textUpcomingTemp.setText(nextTaskText);
             });
         }
