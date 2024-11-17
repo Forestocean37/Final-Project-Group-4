@@ -109,7 +109,7 @@ public class Task {
 
     public TaskModel getNextTask() {
         if (nextTask < 0) {
-            return new TaskModel();
+            return null;
         }
         return taskList.get(nextTask);
     }

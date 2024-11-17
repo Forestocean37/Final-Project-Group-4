@@ -15,17 +15,11 @@ public class TaskModel implements Parcelable {
     private String startTime;
     private List<String> people;
     private LocationModel location;
+    private boolean isCompleted;
 
     private String taskId;
 
-    public TaskModel() {
-        this.title = "NULL";
-        this.type = "UNKNOWN";
-        this.description = "...";
-        this.startTime = "NULL NULL";
-        this.people = new ArrayList<>();
-        this.location = new LocationModel("NULL", "NULL");
-    }
+    public TaskModel() {}
 
     public TaskModel(String title, String type, String description, String startTime, List<String> people, LocationModel location) {
         this.title = title;
@@ -34,6 +28,7 @@ public class TaskModel implements Parcelable {
         this.startTime = startTime;
         this.people = people;
         this.location = location;
+        this.isCompleted = false;
     }
 
     public TaskModel(String title, String type, String startTime, List<String> people, LocationModel location) {
@@ -43,6 +38,7 @@ public class TaskModel implements Parcelable {
         this.startTime = startTime;
         this.people = people;
         this.location = location;
+        this.isCompleted = false;
     }
 
     public TaskModel(String title, String type, String description, String startTime, LocationModel location) {
@@ -52,6 +48,7 @@ public class TaskModel implements Parcelable {
         this.startTime = startTime;
         this.people = new ArrayList<>();
         this.location = location;
+        this.isCompleted = false;
     }
 
     public TaskModel(String title, String type, String startTime, LocationModel location) {
@@ -61,6 +58,7 @@ public class TaskModel implements Parcelable {
         this.startTime = startTime;
         this.people = new ArrayList<>();
         this.location = location;
+        this.isCompleted = false;
     }
 
     public String getTitle() {
@@ -119,6 +117,14 @@ public class TaskModel implements Parcelable {
         this.taskId = taskId;
     }
 
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -129,6 +135,7 @@ public class TaskModel implements Parcelable {
                 ", startTime='" + startTime + '\'' +
                 ", people=" + people +
                 ", location=" + location +  // Calls the toString() method of LocationModel
+                ", isCompleted=" + isCompleted +
                 ", taskId='" + taskId + '\'' +
                 '}';
     }

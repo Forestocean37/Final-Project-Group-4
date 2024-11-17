@@ -8,7 +8,7 @@
     <!-- Home Page -->
     <string name="home_btn_personal">Personal</string>
     <string name="home_btn_social">Social</string>
-    <string name="home_text_hello">Hello User: Tommy</string>
+    <string name="home_text_hello">Hello User: USER_FULL_NAME</string>
     <string name="home_text_title_1">You\'ve got</string>
     <string name="home_text_title_2">0 tasks today</string>
     <string name="home_text_options">Options</string>

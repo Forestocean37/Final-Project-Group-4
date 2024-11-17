@@ -181,7 +181,7 @@
         android:id="@+id/text_upcoming_temp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Meeting\nDescription: XXX\n09:30\nAlex Jesus\nGoggle Meet"
+        android:text="You have no upcoming task...\n\n\n\n"
         android:textSize="20sp"
         android:textColor="@color/white"
         android:layout_marginHorizontal="12dp"
