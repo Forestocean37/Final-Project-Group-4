@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.dashboard.DashboardFragment"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".ui.dashboard.DashboardFragment">
 
     <!-- Date and Task Button -->
     <TextView
@@ -45,6 +46,22 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="8dp" />
 
+    <!-- Edit Button Below Profile -->
+    <Button
+        android:id="@+id/edit_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:backgroundTint="#0A84FF"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:padding="3dp"
+        android:minWidth="48dp"
+        android:minHeight="32dp"
+        app:layout_constraintTop_toBottomOf="@id/profile_heading"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp" />
+
     <!-- Profile Image with weight -->
     <ImageView
         android:id="@+id/profile_image"
@@ -52,7 +69,7 @@
         android:layout_height="0dp"
         android:scaleType="centerCrop"
         android:src="@drawable/profile_image"
-        app:layout_constraintTop_toBottomOf="@id/profile_heading"
+        app:layout_constraintTop_toBottomOf="@id/edit_profile_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_default="percent"
@@ -205,7 +222,7 @@
         android:layout_marginTop="16dp"
         android:text="Sign Out"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#FF0000"
+        android:backgroundTint="#B2C248"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/description_text"
         app:layout_constraintStart_toStartOf="parent"
