@@ -1,0 +1,289 @@
+[33mcommit 0d15bca914377c4c275527c65ec1b1bf3516e887[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 09c65e0 bdf0bb7
+Author: ziangtang <tang.zia@northeastern.edu>
+Date:   Fri Nov 22 16:46:11 2024 -0800
+
+    fixed
+
+[33mcommit bdf0bb73cab2b8c0750f9f56aff2b12282ffdddb[m
+Merge: e24a04a bf4fbca
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Sat Nov 16 21:54:01 2024 -0800
+
+    Merge pull request #13 from swqa7697/update-task-model
+    
+    Optimized task model, task shown in home and adding task behavior
+
+[33mcommit bf4fbcac4e0f921eec639783d34747b5c21c252f[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Sat Nov 16 21:51:37 2024 -0800
+
+    Optimized task model, task shown in home and adding task behavior
+
+[33mcommit e24a04a6238775458e0de8ef5576690b054e4922[m
+Merge: ca37552 6455e3f
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Sat Nov 16 20:16:02 2024 -0800
+
+    Merge pull request #12 from swqa7697/fixtaskbugs
+    
+    CRUD of task complete
+
+[33mcommit 6455e3fca8f683620f3a07bc31b7c51d2d1082b9[m
+Author: chenLearning2023 <chen.zeji@northeastern.edu>
+Date:   Fri Nov 15 19:09:14 2024 -0800
+
+    edit task complete
+
+[33mcommit 71a652ae1fd8bb0a431d18e81982531d34203d5d[m
+Author: chenLearning2023 <chen.zeji@northeastern.edu>
+Date:   Fri Nov 15 17:16:18 2024 -0800
+
+    delete task complete
+
+[33mcommit 4e9d6634dbe1b8099aa49777b3615496625a687b[m
+Author: chenLearning2023 <chen.zeji@northeastern.edu>
+Date:   Fri Nov 15 16:23:40 2024 -0800
+
+    some color change, UI change
+
+[33mcommit 09c65e06d47fdc374245ca8ea5c77c231823f63a[m
+Author: ziangtang <tang.zia@northeastern.edu>
+Date:   Fri Nov 15 15:20:19 2024 -0800
+
+    task page ui update and need color dots
+
+[33mcommit 671d3d8660e6abcb87369215296dcb6b11ed789b[m
+Author: chenLearning2023 <chen.zeji@northeastern.edu>
+Date:   Fri Nov 15 12:14:20 2024 -0800
+
+    read task succeed
+
+[33mcommit c7f18f90113869a28483c9c6a5b10774eb2a5063[m
+Author: chenLearning2023 <chen.zeji@northeastern.edu>
+Date:   Fri Nov 15 10:27:37 2024 -0800
+
+    add task succedd
+
+[33mcommit c42108c995abedbac1147d3a8f814e6b99a9920b[m
+Author: chenLearning2023 <chen.zeji@northeastern.edu>
+Date:   Fri Nov 15 00:36:10 2024 -0800
+
+    validate add task input
+
+[33mcommit ce247c90259e28072c7a999fe1fdd9a1270beafa[m
+Author: chenLearning2023 <chen.zeji@northeastern.edu>
+Date:   Thu Nov 14 21:58:45 2024 -0800
+
+    Sign out Button Add, some update at profile page
+
+[33mcommit ca37552caf3a8433180eb72b022c6dc18a3f2399[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 20:13:04 2024 -0800
+
+    Update README.md
+
+[33mcommit 79e04c7c49f83e7dda8b3620560b963973d16132[m
+Merge: 023ad5d 8e92f17
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 19:55:10 2024 -0800
+
+    Merge pull request #11 from swqa7697/fixtaskbugs
+    
+    Task Bugs fixed (when no upcoming task)
+
+[33mcommit 8e92f17d8e293f58608829fd63f429eceac24c6c[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 19:54:13 2024 -0800
+
+    Task Bugs fixed (when no upcoming task)
+
+[33mcommit 023ad5d09aa3f5bd6272899500139223a1819408[m
+Merge: 0934794 96790f2
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 14:20:18 2024 -0800
+
+    Merge pull request #10 from swqa7697/fixbug
+    
+    Bugs fixed
+
+[33mcommit 96790f20cbd8c7871f7069c0a5f769aae71d1c2c[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 14:19:42 2024 -0800
+
+    Bugs fixed
+
+[33mcommit 0934794796cfa35be5dfcde8c2e2c8b5cad47c3e[m
+Merge: 0073827 ceaf15f
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 14:05:44 2024 -0800
+
+    Merge pull request #9 from swqa7697/somefixes
+    
+    Minor fixes
+
+[33mcommit ceaf15f6728801520bff3d4ae3eade08495b412b[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 14:04:38 2024 -0800
+
+    Minor fixes
+
+[33mcommit 007382796f43f9bb8aaf5c73f86241fdd353d4e2[m
+Merge: f4e27f8 473a415
+Author: ziangtang <156186806+ziangtang@users.noreply.github.com>
+Date:   Thu Nov 14 13:17:38 2024 -0800
+
+    Merge pull request #8 from ziangtang/master
+    
+    AI page
+
+[33mcommit 473a4152cefc50727c0267fd6596c6c062ec6fa0[m
+Merge: 1d971aa f4e27f8
+Author: ziangtang <156186806+ziangtang@users.noreply.github.com>
+Date:   Thu Nov 14 13:17:24 2024 -0800
+
+    Merge branch 'master' into master
+
+[33mcommit f4e27f8d870eb796ffd131ba61f4613ccad6815a[m
+Merge: b50e776 7ed24c6
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 12:41:15 2024 -0800
+
+    Merge pull request #6 from swqa7697/database
+    
+    Database implementations
+
+[33mcommit 7ed24c68f6180fbf4ef9c43d552ad2555fe1469c[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 12:24:54 2024 -0800
+
+    Added Task util methods
+
+[33mcommit d427c6caa87cf7698899fa2422aa2d2e6577aa48[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 07:55:14 2024 -0800
+
+    Added User util methods
+
+[33mcommit 9589196007ebe59623a9bc62ef4db3cdaad59647[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 14 05:01:16 2024 -0800
+
+    Added Authentication
+
+[33mcommit 1d971aa8507540a2f1ccbb6c139efc11a06b1f5b[m
+Author: ziangtang <156186806+ziangtang@users.noreply.github.com>
+Date:   Wed Nov 13 19:38:19 2024 -0800
+
+    Update README.md
+
+[33mcommit 9b4c0303b9653778bd2fd883baa8646b9f42881d[m
+Author: ziangtang <tang.zia@northeastern.edu>
+Date:   Wed Nov 13 19:37:03 2024 -0800
+
+    most genai done
+
+[33mcommit 92559e2210cf6b36b2d9bef6003b8c7090e078c5[m
+Author: ziangtang <tang.zia@northeastern.edu>
+Date:   Sun Nov 10 15:52:00 2024 -0800
+
+    50% genai done
+
+[33mcommit fa70ef75f8d675e01348cb0a618c5c07833a70f3[m
+Author: ziangtang <156186806+ziangtang@users.noreply.github.com>
+Date:   Sat Nov 9 20:49:17 2024 -0800
+
+    Update README.md
+
+[33mcommit 6824a6b8ed6a2c01beae91c8b39a85ca3f602bc8[m
+Author: ziangtang <tang.zia@northeastern.edu>
+Date:   Sat Nov 9 20:47:19 2024 -0800
+
+    this version is stable and work portional
+
+[33mcommit b50e776f2866fcfee0e78b1c4ac491c019b59f21[m
+Merge: 5747f67 1f8ddcb
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 7 22:58:59 2024 -0800
+
+    Merge pull request #5 from chenLearning2023/master
+    
+    Add Task Fragment Jumping Error solved,
+
+[33mcommit 1f8ddcb57c78a3caebcd1965adb0bdac847a4e4f[m
+Author: chenLearning2023 <chen.zeji@northeastern.edu>
+Date:   Thu Nov 7 22:48:07 2024 -0800
+
+    Add Task Fragment Jumping Error solved,
+
+[33mcommit 5747f67146ed0917e1da7efbd4bfccdb5d76891e[m
+Merge: 50b136f 7afc5ec
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 7 20:12:53 2024 -0800
+
+    Merge pull request #4 from chenLearning2023/master
+    
+    Add Task
+
+[33mcommit 7afc5ec0ec2d875c555ff6de1f031c2493732005[m
+Author: chenLearning2023 <chen.zeji@northeastern.edu>
+Date:   Thu Nov 7 20:10:10 2024 -0800
+
+    Add Task
+
+[33mcommit 50b136f2d0d07ac5819159620969468736cedf75[m
+Merge: 05f253f 367ccfa
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 7 19:29:37 2024 -0800
+
+    Merge pull request #3 from Forestocean37/profile
+    
+    profile update
+
+[33mcommit 05f253ff35ce0d02ee40dacad5fcd420c8c31362[m
+Merge: bbc8eb0 27849a3
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 7 19:28:39 2024 -0800
+
+    Merge pull request #2 from swqa7697/homepage
+    
+    Starting point of homepage
+
+[33mcommit 367ccfaaad0af19c6b51db516331fc84824b9f1c[m
+Author: Forestocean37 <forestocean37@gmail.com>
+Date:   Thu Nov 7 19:14:54 2024 -0800
+
+    profile update
+
+[33mcommit 27849a30c0ce6475d9c7d6457a0455e64a272d21[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 7 18:03:06 2024 -0800
+
+    Starting point of homepage
+
+[33mcommit bbc8eb0b341daa7962176ed4415b012187321745[m
+Merge: 75d45b7 4be7e60
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Thu Nov 7 15:15:45 2024 -0800
+
+    Merge pull request #1 from ziangtang/master
+    
+    Merge Ziang's work
+
+[33mcommit 4be7e6065ad7ccd618896c9e958dca42eef1828e[m
+Author: ziangtang <156186806+ziangtang@users.noreply.github.com>
+Date:   Tue Nov 5 13:59:05 2024 -0800
+
+    Create README.md
+
+[33mcommit 6e8ae28871f9aa4b10bc763bae1673e0158746be[m
+Author: ziangtang <tang.zia@northeastern.edu>
+Date:   Tue Nov 5 13:56:43 2024 -0800
+
+    Added UI improvements for task detail and add task button
+
+[33mcommit 75d45b769c932dfe71e7d0b4f15088d17b364a87[m
+Author: swqa7697 <swqa7697@gmail.com>
+Date:   Mon Nov 4 16:03:13 2024 -0800
+
+    Completed bottom nav bar (Initial commit)
