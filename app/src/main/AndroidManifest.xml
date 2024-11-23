@@ -37,8 +37,9 @@
             android:exported="true"
             android:label="@string/app_name" />
 
+        <!-- Profile Activities -->
+        <activity android:name=".ui.dashboard.ProfileEditActivity" />
+        <activity android:name=".ui.dashboard.ProfileActivity" />
     </application>
 
 </manifest>
-
-
