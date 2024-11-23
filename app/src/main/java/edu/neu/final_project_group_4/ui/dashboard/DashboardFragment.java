@@ -1,5 +1,6 @@
 package edu.neu.final_project_group_4.ui.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,16 @@ public class DashboardFragment extends Fragment {
         //sign out
         binding.signOutButton.setOnClickListener(v -> {
             Auth.signOut(getActivity());
+        });
+
+        // Set a click listener on the Edit Profile button
+        binding.editProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Start the ProfileEditActivity
+                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                startActivity(intent);
+            }
         });
 
         return root;
