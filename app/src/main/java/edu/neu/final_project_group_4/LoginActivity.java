@@ -39,12 +39,12 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-            }
-        };
-        getOnBackPressedDispatcher().addCallback(this, callback);
+        //OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+        //    @Override
+        //    public void handleOnBackPressed() {
+        //    }
+        //};
+        //getOnBackPressedDispatcher().addCallback(this, callback);
 
         startSignInFlow();
     }
@@ -57,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
+                .setLogo(R.drawable.ic_logo)
+                .setTheme(R.style.Theme_FinalProjectGroup4)
                 .build();
 
         signInLauncher.launch(signInIntent);
