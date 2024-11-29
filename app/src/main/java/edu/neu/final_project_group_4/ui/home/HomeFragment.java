@@ -2,10 +2,11 @@ package edu.neu.final_project_group_4.ui.home;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ import edu.neu.final_project_group_4.utils.User;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
+
+    private boolean backButtonPressed = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -115,8 +118,18 @@ public class HomeFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                if (backButtonPressed) {
+                    requireActivity().finishAffinity();
+                } else {
+                    backButtonPressed = true;
+                    Toast.makeText(requireContext(), "Press back again to exit",
+                            Toast.LENGTH_SHORT).show();
+                    // Double click interval should be in 1.5s
+                    new Handler().postDelayed(() -> backButtonPressed = false, 1500);
+                }
             }
         };
+
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
