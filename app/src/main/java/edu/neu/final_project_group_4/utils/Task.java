@@ -37,7 +37,7 @@ public class Task {
     }
 
     public void addNewTask(TaskModel task) {
-        db.collection("user").document(User.getInstance().getUserId())
+        db.collection("users").document(User.getInstance().getUserId())
                 .collection("tasks")
                 .add(task)
                 .addOnSuccessListener(documentReference -> Log.d("Task",
@@ -50,7 +50,7 @@ public class Task {
     }
 
     public void fetchTasks(FetchTasksCallback callback) {
-        db.collection("user").document(User.getInstance().getUserId())
+        db.collection("users").document(User.getInstance().getUserId())
                 .collection("tasks")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -129,7 +129,7 @@ public class Task {
         updateData.put("people", updateTask.getPeople());
         updateData.put("location", updateTask.getLocation());
 
-        db.collection("user").document(User.getInstance().getUserId())
+        db.collection("users").document(User.getInstance().getUserId())
                 .collection("tasks").document(taskId)
                 .update(updateData)
                 .addOnSuccessListener(unused -> Log.d("Task", "Task updated successfully"))
@@ -138,7 +138,7 @@ public class Task {
 
     // Delete the task locally first, and then submit change to database
     public void deleteTask(TaskModel task) {
-        db.collection("user").document(User.getInstance().getUserId())
+        db.collection("users").document(User.getInstance().getUserId())
                 .collection("tasks").document(task.getTaskId())
                 .delete()
                 .addOnSuccessListener(unused -> Log.d("Task", "Task deleted successfully"))
