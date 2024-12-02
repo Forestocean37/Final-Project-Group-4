@@ -1,29 +1,39 @@
 package edu.neu.final_project_group_4.ui.tasks;
 
+import static edu.neu.final_project_group_4.R.drawable.ic_cancel;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 
+
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.neu.final_project_group_4.MainActivity;
 import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.models.LocationModel;
 import edu.neu.final_project_group_4.models.TaskModel;
@@ -41,6 +51,12 @@ public class AddTaskFragment extends Fragment {
     private HashMap<Button, Integer> buttonColors; // Store original colors for each button
     private Button btnAddTask;
     private TextInputEditText taskDetailInput, taskTitleInput, locationInput;
+    private LinearLayout team_container;
+    private TextInputLayout teamInputLayout;
+    private TextInputEditText teamInputEditText;
+    private int memberCounter = 1; // team_info Counter for unique IDs
+    private RadioGroup radioGroup;
+    private RadioButton radioOnline,radioOffline;
 
     // the task data need to create
     private String type;
@@ -48,6 +64,8 @@ public class AddTaskFragment extends Fragment {
     private String detail;
     private String startTime; // To store final "dd-MM-yyyy HH:mm" formatted value
     private String location;
+    private String locationType;
+    private List<String> members;//team members
 
     private int selectedYear, selectedMonth, selectedDay;
 
@@ -66,6 +84,9 @@ public class AddTaskFragment extends Fragment {
         locationInput = root.findViewById(R.id.locationInput);
         btnDatePicker = root.findViewById(R.id.btnDatePicker);
         btnTimePicker = root.findViewById(R.id.btnTimePicker);
+        radioGroup = root.findViewById(R.id.radioGroup);
+        radioOnline = root.findViewById(R.id.radio_online);
+        radioOffline = root.findViewById(R.id.radio_offline);
         // Handle date picker
         btnDatePicker.setOnClickListener(v -> showDatePicker());
 
@@ -79,6 +100,46 @@ public class AddTaskFragment extends Fragment {
                 Toast.makeText(requireContext(), "Please select a date first!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        //Handle locationType
+        locationType="Offline";//default
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radio_online) {
+                    Toast.makeText(getContext(), "Online selected", Toast.LENGTH_SHORT).show();
+                    locationType = "Online";
+                } else if (checkedId == R.id.radio_offline) {
+                    Toast.makeText(getContext(), "Offline selected", Toast.LENGTH_SHORT).show();
+                    locationType = "Offline";
+                }
+            }
+        });
+
+        //handle team_info
+        team_container = root.findViewById(R.id.team_container);
+        teamInputEditText = root.findViewById(R.id.team_input_edit_text);
+        teamInputLayout  = root.findViewById(R.id.team_input_layout);
+
+        // Set a meaningful tag for the initial TextInputLayout
+        teamInputLayout.setTag("team_member_info_" + memberCounter);
+        memberCounter++;
+
+        teamInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputText = teamInputEditText.getText().toString().trim();
+
+                if (!inputText.isEmpty()) {
+                    // Create and add another TextInputLayout dynamically
+                    addNewTextInputLayout(null);
+
+                } else {
+                    teamInputEditText.setError("Input cannot be blank");
+                }
+            }
+        });
+
 
         // Initialize buttons
         buttons = new ArrayList<>();
@@ -122,18 +183,17 @@ public class AddTaskFragment extends Fragment {
                 title = taskTitleInput.getText().toString();
                 detail = taskDetailInput.getText().toString();
                 location = locationInput.getText().toString();
-                List<String> people = new ArrayList<>();
-                people.add(User.getInstance().getFullName());
-                LocationModel newLocation = new LocationModel(location, location);
-                TaskModel newTask = new TaskModel(title,type,detail,startTime,people,newLocation);
+                LocationModel newLocation = new LocationModel(locationType, location);
+                TaskModel newTask = new TaskModel(title,type,detail,startTime,members,newLocation);
 
-                //checn if it is a create task or edit task
+                //check if it is a create task or edit task
                 if (getArguments() != null && getArguments().containsKey("task")){
                     TaskModel oldTask = getArguments().getParcelable("task");
                     taskAPI.updateTask(oldTask.getTaskId(),newTask);
                     Toast.makeText(requireContext(), "successfully Edit task", Toast.LENGTH_SHORT).show();
                 }else{
                     taskAPI.addNewTask(newTask);
+                    Log.e("team",newTask.toString());
                     Toast.makeText(requireContext(), "successfully Add task", Toast.LENGTH_SHORT).show();
                 }
                 NavController navController = Navigation.findNavController(v);
@@ -161,7 +221,7 @@ public class AddTaskFragment extends Fragment {
 
         return root;
     }
-
+    //TODO:
     private void resetTaskUI(TaskModel task) {
         btnAddTask.setText("Edit Task");
         tvAddTask.setText("Edit a Task");
@@ -197,9 +257,33 @@ public class AddTaskFragment extends Fragment {
             taskTitleInput.setText(task.getTitle());
         }
 
+        //set locationType from task's locationtype
+        String locationType = task.getLocation().getType();
+        // Set the corresponding RadioButton as checked based on the status
+        if ("Online".equals(locationType)) {
+            radioOnline.setChecked(true);
+        } else if ("Offline".equals(locationType)) {
+            radioOffline.setChecked(true);
+        }
+
         // Set locationInput text from the task's location address
         if (task.getLocation() != null && task.getLocation().getAddress() != null) {
             locationInput.setText(task.getLocation().getAddress());
+        }
+
+        members = task.getPeople();
+        int membersSize = members.size();
+        // Set member info
+        if (membersSize > 0){
+            teamInputEditText.setText(members.get(0));
+
+            // If members.size > 1, create more TextInputLayouts dynamically
+            if (membersSize > 1){
+                for (int i = 1; i < membersSize; i++) {
+                    addNewTextInputLayout(members.get(i));
+                }
+            }
+
         }
     }
 
@@ -226,6 +310,11 @@ public class AddTaskFragment extends Fragment {
             return false;
         }
 
+        //check if team member is empty
+        getAllMemberNames(team_container);
+        if(members.size() <= 0){
+            return false;
+        }
 
         // All fields are valid
         return true;
@@ -291,6 +380,79 @@ public class AddTaskFragment extends Fragment {
         // selected button become gray
         selectedButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.btn_selected));
         type = selectedButton.getText().toString();
+    }
+
+    // Used for adding or editing team member info
+    private void addNewTextInputLayout(@Nullable String memberName) {
+        TextInputLayout newTextInputLayout = new TextInputLayout(getContext());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        newTextInputLayout.setLayoutParams(layoutParams);
+        newTextInputLayout.setHint("Add Team Member");
+        newTextInputLayout.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
+        newTextInputLayout.setEndIconDrawable(ContextCompat.getDrawable(getContext(), ic_cancel));
+
+        TextInputEditText newEditText = new TextInputEditText(getContext());
+        newEditText.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        newEditText.setId(View.generateViewId());
+
+        // Set the text if memberName is provided (edit mode)
+        if (memberName != null && !memberName.trim().isEmpty()) {
+            newEditText.setText(memberName);
+        }
+
+        newTextInputLayout.addView(newEditText);
+
+        // Set a meaningful tag for the new TextInputLayout
+        newTextInputLayout.setTag("team_member_info_" + memberCounter);
+        memberCounter++;
+
+        // Add the new TextInputLayout to the container
+        team_container.addView(newTextInputLayout);
+
+        // Set the click listener for the new end icon
+        newTextInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team_container.removeView(newTextInputLayout);
+            }
+        });
+    }
+
+
+    //get all member name
+    private List<String> getAllMemberNames(LinearLayout container) {
+        members = new ArrayList<>();
+
+        // Iterate through all children of the LinearLayout
+        for (int i = 0; i < container.getChildCount(); i++) {
+            ViewGroup child = (ViewGroup) container.getChildAt(i);
+
+            // Check if the child is a TextInputLayout
+            if (child instanceof TextInputLayout) {
+                TextInputLayout textInputLayout = (TextInputLayout) child;
+
+                // Get the TextInputEditText inside the TextInputLayout
+                TextInputEditText editText = (TextInputEditText) textInputLayout.getEditText();
+
+                if (editText != null) {
+                    // Get the text entered in the EditText
+                    String name = editText.getText().toString().trim();
+
+                    // Add non-empty names to the list
+                    if (!name.isEmpty()) {
+                        members.add(name);
+                    }
+                }
+            }
+        }
+
+        return members;
     }
 
 }

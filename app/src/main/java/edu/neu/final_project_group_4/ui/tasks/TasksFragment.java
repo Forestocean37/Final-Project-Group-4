@@ -15,24 +15,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.models.TaskModel;
@@ -50,12 +44,13 @@ public class TasksFragment extends Fragment {
     // this is use to filter the task for a specific date. default value is today
     private static List<TaskModel> todayTasks = new ArrayList<>();
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-    static String selectedDate = dateFormat.format(new Date());
+    static String selectedDate;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_tasks, container, false);
+        selectedDate = dateFormat.format(new Date());
         Toast.makeText(requireContext(), selectedDate, Toast.LENGTH_SHORT).show();
         if (getArguments() != null) {
             String taskType = getArguments().getString("task_type", "No Task Type");
@@ -71,6 +66,13 @@ public class TasksFragment extends Fragment {
         //get the task data from firebase
         taskAPI.fetchTasks(()->{
             taskList = Task.getInstance().getTaskList();
+
+            //filter the taskList if it is jump from the home page
+            if (getArguments() != null) {
+                String taskType = getArguments().getString("task_type");
+                // Filter the task list
+                taskList = filterTasksByType(taskType,taskList);
+            }
             getTodayTasks(taskList,selectedDate);
             tasksAdapter = new TasksAdapter(todayTasks);
             recyclerView.setAdapter(tasksAdapter);
@@ -113,6 +115,22 @@ public class TasksFragment extends Fragment {
             calendarView.setVisibility(View.VISIBLE);
         }
     }
+
+    // Function to filter tasks type
+    private List<TaskModel> filterTasksByType(String type, List<TaskModel> taskList) {
+        List<TaskModel> filteredList = new ArrayList<>();
+        if (type == null || type.isEmpty()) {
+            return taskList; // Return the full list if type is null or empty
+        }
+
+        for (TaskModel task : taskList) {
+            if (type.equals(task.getType())) { // Compare with the `type` field
+                filteredList.add(task);
+            }
+        }
+        return filteredList;
+    }
+
 
     // Function to filter today's tasks
     private static List<TaskModel> getTodayTasks(List<TaskModel> allTasks, String selectedDate) {
@@ -182,7 +200,12 @@ public class TasksFragment extends Fragment {
             holder.taskTime.setText(task.getStartTime());
             holder.taskTitle.setText(task.getTitle());
             holder.taskDetails.setText(task.getDescription());
+            holder.taskLocationType.setText(task.getLocation().getType());
             holder.taskAddress.setText(task.getLocation().getAddress());
+
+            List<String> members = task.getPeople();
+            String allMembers = String.join(", ", members);
+            holder.memberInfo.setText(allMembers);
 
             // Determine if the task is outdated
             boolean isOutdated = isTaskOutdated(task.getStartTime());
@@ -262,7 +285,7 @@ public class TasksFragment extends Fragment {
         }
 
         static class TaskViewHolder extends RecyclerView.ViewHolder {
-            TextView taskType,taskTime, taskTitle, taskDetails, taskAddress;
+            TextView taskType,taskTime, taskTitle, taskDetails, taskLocationType,taskAddress, memberInfo;
             ImageButton btnEditTask, btnDeleteTask;
 
             TaskViewHolder(View itemView) {
@@ -271,7 +294,9 @@ public class TasksFragment extends Fragment {
                 taskTime = itemView.findViewById(R.id.task_time);
                 taskTitle = itemView.findViewById(R.id.task_title);
                 taskDetails = itemView.findViewById(R.id.task_details);
+                taskLocationType = itemView.findViewById(R.id.task_location_type);
                 taskAddress = itemView.findViewById(R.id.task_address);
+                memberInfo = itemView.findViewById(R.id.member_info);
                 btnEditTask = itemView.findViewById(R.id.btnEditTask);
                 btnDeleteTask = itemView.findViewById(R.id.btnDeleteTask);
             }
