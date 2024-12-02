@@ -182,7 +182,12 @@ public class TasksFragment extends Fragment {
             holder.taskTime.setText(task.getStartTime());
             holder.taskTitle.setText(task.getTitle());
             holder.taskDetails.setText(task.getDescription());
+            holder.taskLocationType.setText(task.getLocation().getType());
             holder.taskAddress.setText(task.getLocation().getAddress());
+
+            List<String> members = task.getPeople();
+            String allMembers = String.join(", ", members);
+            holder.memberInfo.setText(allMembers);
 
             // Determine if the task is outdated
             boolean isOutdated = isTaskOutdated(task.getStartTime());
@@ -262,7 +267,7 @@ public class TasksFragment extends Fragment {
         }
 
         static class TaskViewHolder extends RecyclerView.ViewHolder {
-            TextView taskType,taskTime, taskTitle, taskDetails, taskAddress;
+            TextView taskType,taskTime, taskTitle, taskDetails, taskLocationType,taskAddress, memberInfo;
             ImageButton btnEditTask, btnDeleteTask;
 
             TaskViewHolder(View itemView) {
@@ -271,7 +276,9 @@ public class TasksFragment extends Fragment {
                 taskTime = itemView.findViewById(R.id.task_time);
                 taskTitle = itemView.findViewById(R.id.task_title);
                 taskDetails = itemView.findViewById(R.id.task_details);
+                taskLocationType = itemView.findViewById(R.id.task_location_type);
                 taskAddress = itemView.findViewById(R.id.task_address);
+                memberInfo = itemView.findViewById(R.id.member_info);
                 btnEditTask = itemView.findViewById(R.id.btnEditTask);
                 btnDeleteTask = itemView.findViewById(R.id.btnDeleteTask);
             }
