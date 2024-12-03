@@ -1,18 +1,30 @@
 package edu.neu.final_project_group_4.ui.dashboard;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.SharedPreferences;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Button;
+import com.bumptech.glide.Glide;
 
 import edu.neu.final_project_group_4.R;
+import edu.neu.final_project_group_4.utils.User;
 
 public class ProfileEditActivity extends AppCompatActivity {
     private EditText descriptionBox;
+    private ImageView profileImage;
     private Button saveButton;
+    private Button cancelButton;
+    private Button uploadImageButton;
+    private Uri selectedImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,29 +33,57 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         // Initialize views
         descriptionBox = findViewById(R.id.description_box);
+        profileImage = findViewById(R.id.profile_picture);
         saveButton = findViewById(R.id.save_button);
+        cancelButton = findViewById(R.id.cancel_button);
+        uploadImageButton = findViewById(R.id.upload_picture_button);
 
-        // Load saved description (if any)
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String savedDescription = sharedPreferences.getString("description", "");
-        descriptionBox.setText(savedDescription);
+        User user = User.getInstance();
+        // Load current description and profile image
+        descriptionBox.setText(user.getUserDescription());
+        Uri photoUri = user.getPhotoUrl();
+        if (photoUri != null) {
+            Glide.with(this).load(photoUri).into(profileImage);
+        } else {
+            profileImage.setImageResource(R.drawable.profile_image);
+        }
 
-        // Save description when "Save" button is clicked
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String description = descriptionBox.getText().toString();
+        // Handle image selection
+        ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        if (selectedImageUri != null) {
+                            profileImage.setImageURI(selectedImageUri);
+                        }
+                    }
+                });
 
-                // Save to SharedPreferences
-                SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("description", description);
-                editor.apply();
+        uploadImageButton.setOnClickListener(view -> {
+            // Create an intent to open the file chooser for images
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*"); // Allow only image files to be selected
 
-                finish();
-            }
+            // Launch the image picker activity
+            imagePickerLauncher.launch(intent);
         });
 
+        // Save profile changes
+        saveButton.setOnClickListener(view -> {
+            String newDescription = descriptionBox.getText().toString();
+            user.editDescription(newDescription);
+
+            if (selectedImageUri != null) {
+                user.updateProfilePhoto(selectedImageUri.toString());
+            }
+
+            Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+            finish();
+        });
+
+        // Cancel without saving
+        cancelButton.setOnClickListener(view -> finish());
     }
 }
 
