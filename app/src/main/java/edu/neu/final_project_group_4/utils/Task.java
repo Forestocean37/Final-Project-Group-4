@@ -21,6 +21,8 @@ public class Task {
     private int nextTask;
     private int tasksToday;
 
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+
     private static class Instance {
         private static final Task _instance = new Task();
     }
@@ -74,9 +76,10 @@ public class Task {
     private void arrangeTasks() {
         taskList.sort(Comparator.comparing(TaskModel::getStartTime));
 
-        String currentTime = formatTime(LocalDateTime.now());
+        LocalDateTime currentTime = LocalDateTime.now();
         for (int i = 0; i < taskList.size(); i++) {
-            if (currentTime.compareTo(taskList.get(i).getStartTime()) <= 0) {
+            if (currentTime.isBefore(convertToTime(taskList.get(i).getStartTime())) &&
+                !taskList.get(i).isCompleted()) {
                 nextTask = i;
                 break;
             }
@@ -85,7 +88,7 @@ public class Task {
         tasksToday = 0;
         if (nextTask >= 0) {
             for (int i = nextTask; i < taskList.size(); i++) {
-                if (!isSameDay(currentTime, taskList.get(i).getStartTime())) {
+                if (!isSameDay(currentTime, convertToTime(taskList.get(i).getStartTime()))) {
                     break;
                 }
                 tasksToday++;
@@ -100,11 +103,19 @@ public class Task {
     // Use this method to ensure consistency of timestamp format
     // Modify if needed (for your front-end requirement)
     public String formatTime(LocalDateTime time) {
-        return time.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+        return time.format(formatter);
+    }
+
+    public LocalDateTime convertToTime(String time) {
+        return LocalDateTime.parse(time, formatter);
     }
 
     private boolean isSameDay(String t1, String t2) {
         return t1.split(" ")[0].equals(t2.split(" ")[0]);
+    }
+
+    private boolean isSameDay(LocalDateTime t1, LocalDateTime t2) {
+        return t1.toLocalDate().equals(t2.toLocalDate());
     }
 
     public TaskModel getNextTask() {
