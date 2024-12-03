@@ -8,6 +8,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,17 +70,30 @@ public class User {
                 });
     }
 
-    public void updateProfilePhoto(String photoUri) {
-        UserProfileChangeRequest update = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(Uri.parse(photoUri))
-                .build();
+    public void updateProfilePhoto(Uri photoUri) {
+        if (photoUri != null) {
+            // Upload photo
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                    .child(user.getUid());
 
-        user.updateProfile(update)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d("User", "Successfully updated profile photo");
-                    }
-                });
+            storageReference.putFile(photoUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                            // Update profile
+                            UserProfileChangeRequest update = new UserProfileChangeRequest.Builder()
+                                    .setPhotoUri(uri)
+                                    .build();
+
+                            user.updateProfile(update)
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            Log.d("User", "Successfully updated profile photo");
+                                        }
+                                    });
+                        });
+                    })
+                    .addOnFailureListener(e -> Log.e("User", "Update profile photo failed", e));
+        }
     }
 
     public void fetchUserDescription() {

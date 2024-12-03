@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,10 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
+import edu.neu.final_project_group_4.LoginActivity;
+import edu.neu.final_project_group_4.MainActivity;
 import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.utils.User;
 
 public class ProfileEditActivity extends AppCompatActivity {
+    private EditText userFullName;
     private EditText descriptionBox;
     private ImageView profileImage;
     private Button saveButton;
@@ -32,6 +36,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         setContentView(R.layout.profile_edit);
 
         // Initialize views
+        userFullName = findViewById(R.id.name_box);
         descriptionBox = findViewById(R.id.description_box);
         profileImage = findViewById(R.id.profile_picture);
         saveButton = findViewById(R.id.save_button);
@@ -40,6 +45,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         User user = User.getInstance();
         // Load current description and profile image
+        userFullName.setText(user.getFullName());
         descriptionBox.setText(user.getUserDescription());
         Uri photoUri = user.getPhotoUrl();
         if (photoUri != null) {
@@ -56,6 +62,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                         selectedImageUri = result.getData().getData();
                         if (selectedImageUri != null) {
                             profileImage.setImageURI(selectedImageUri);
+                            Log.d("ProfileEdit", "Selected Photo: " + selectedImageUri.toString());
                         }
                     }
                 });
@@ -71,19 +78,29 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         // Save profile changes
         saveButton.setOnClickListener(view -> {
+            String newFullName = userFullName.getText().toString();
+            user.updateFullName(newFullName);
+
             String newDescription = descriptionBox.getText().toString();
             user.editDescription(newDescription);
 
             if (selectedImageUri != null) {
-                user.updateProfilePhoto(selectedImageUri.toString());
+                user.updateProfilePhoto(selectedImageUri);
+                Log.d("ProfileEdit", "Photo Url: " + selectedImageUri.toString());
             }
 
             Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-            finish();
+            whenFinish();
         });
 
         // Cancel without saving
         cancelButton.setOnClickListener(view -> finish());
     }
-}
 
+    private void whenFinish() {
+        User.getInstance().fetchUserDescription();
+        Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+}
