@@ -113,44 +113,137 @@
         app:layout_constraintStart_toStartOf="@id/guideline_boarder_left"
         app:layout_constraintTop_toTopOf="@id/guideline_dividing_2" />
 
-    <Button
-        android:id="@+id/button_personal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:background="@drawable/rounded_view"
-        android:backgroundTint="@color/color1"
-        android:drawableTop="@drawable/ic_coffee"
-        android:drawablePadding="6dp"
-        android:drawableTint="@color/black"
-        android:padding="26dp"
-        android:text="@string/home_btn_personal"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/guideline_dividing_3"
-        app:layout_constraintEnd_toStartOf="@id/button_social"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/guideline_boarder_left"
-        app:layout_constraintTop_toBottomOf="@id/text_options" />
 
-    <Button
-        android:id="@+id/button_social"
-        android:layout_width="0dp"
+
+<!--    <Button-->
+<!--        android:id="@+id/button_personal"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="12dp"-->
+<!--        android:background="@drawable/rounded_view"-->
+<!--        android:backgroundTint="@color/color1"-->
+<!--        android:drawableTop="@drawable/ic_coffee"-->
+<!--        android:drawablePadding="6dp"-->
+<!--        android:drawableTint="@color/black"-->
+<!--        android:padding="26dp"-->
+<!--        android:text="@string/home_btn_personal"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/guideline_dividing_3"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/button_social"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="@id/guideline_boarder_left"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/text_options" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/button_social"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="12dp"-->
+<!--        android:background="@drawable/rounded_view"-->
+<!--        android:drawableTop="@drawable/ic_people"-->
+<!--        android:drawablePadding="6dp"-->
+<!--        android:drawableTint="@color/black"-->
+<!--        android:padding="26dp"-->
+<!--        android:text="@string/home_btn_social"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/guideline_dividing_3"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/guideline_boarder_right"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toEndOf="@id/button_personal"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/text_options" />-->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:background="@drawable/rounded_view"
-        android:drawableTop="@drawable/ic_people"
-        android:drawablePadding="6dp"
-        android:drawableTint="@color/black"
-        android:padding="26dp"
-        android:text="@string/home_btn_social"
-        android:textColor="@color/white"
-        android:textStyle="bold"
+        android:layout_margin="8dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@id/guideline_dividing_3"
-        app:layout_constraintEnd_toStartOf="@id/guideline_boarder_right"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/button_personal"
-        app:layout_constraintTop_toBottomOf="@id/text_options" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_options">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/button_personal"
+                android:layout_width="140dp"
+                android:layout_height="160dp"
+                android:layout_margin="12dp"
+                android:background="@drawable/rounded_view"
+                android:backgroundTint="@color/color1"
+                android:drawableTop="@drawable/ic_coffee"
+                android:drawablePadding="6dp"
+                android:drawableTint="@color/black"
+                android:padding="26dp"
+                android:text="@string/home_btn_personal"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_social"
+                android:layout_width="140dp"
+                android:layout_height="160dp"
+                android:layout_margin="12dp"
+                android:background="@drawable/rounded_view"
+                android:drawableTop="@drawable/ic_people"
+                android:drawablePadding="6dp"
+                android:drawableTint="@color/black"
+                android:padding="26dp"
+                android:text="@string/home_btn_social"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_free"
+                android:layout_width="140dp"
+                android:layout_height="160dp"
+                android:layout_margin="12dp"
+                android:background="@drawable/rounded_view"
+                android:drawableTop="@drawable/ic_free"
+                android:drawablePadding="6dp"
+                android:drawableTint="@color/black"
+                android:padding="26dp"
+                android:text="Free"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_work"
+                android:layout_width="140dp"
+                android:layout_height="160dp"
+                android:layout_margin="12dp"
+                android:background="@drawable/rounded_view"
+                android:drawableTop="@drawable/ic_work"
+                android:drawablePadding="6dp"
+                android:drawableTint="@color/black"
+                android:padding="26dp"
+                android:text="Work"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_to_do_list"
+                android:layout_width="140dp"
+                android:layout_height="160dp"
+                android:layout_margin="12dp"
+                android:background="@drawable/rounded_view"
+                android:drawableTop="@drawable/ic_to_do_list"
+                android:drawablePadding="6dp"
+                android:drawableTint="@color/black"
+                android:padding="26dp"
+                android:text="To do list"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <!-- Add more buttons here if needed -->
+        </LinearLayout>
+    </HorizontalScrollView>
 
 
     <TextView

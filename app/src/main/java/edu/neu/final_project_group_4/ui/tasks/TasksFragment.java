@@ -1,6 +1,7 @@
 package edu.neu.final_project_group_4.ui.tasks;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,13 @@ public class TasksFragment extends Fragment {
     private static List<TaskModel> taskList;
     // this is use to filter the task for a specific date. default value is today
     private static List<TaskModel> todayTasks = new ArrayList<>();
+    private static List<TaskModel> monthTasks = new ArrayList<>();
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
     static String selectedDate;
+
+    // Get the current month as default
+    static SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+    static String currentMonth = monthFormat.format(new Date());
 
     @Nullable
     @Override
@@ -66,14 +72,18 @@ public class TasksFragment extends Fragment {
         //get the task data from firebase
         taskAPI.fetchTasks(()->{
             taskList = Task.getInstance().getTaskList();
-
+            monthTasks = getTasksByMonth(taskList,currentMonth);
+            Log.e("month task", String.valueOf(taskList.size()));
+            Log.e("month task", String.valueOf(monthTasks.size()));
             //filter the taskList if it is jump from the home page
             if (getArguments() != null) {
                 String taskType = getArguments().getString("task_type");
                 // Filter the task list
+
                 taskList = filterTasksByType(taskType,taskList);
             }
             getTodayTasks(taskList,selectedDate);
+
             tasksAdapter = new TasksAdapter(todayTasks);
             recyclerView.setAdapter(tasksAdapter);
         });
@@ -111,9 +121,21 @@ public class TasksFragment extends Fragment {
         isDetailedView = !isDetailedView;
         if (isDetailedView) {
             calendarView.setVisibility(View.GONE);
+            //render monthTasks in adapter
+            // Render monthTasks in the adapter
+            recyclerView.setVisibility(View.VISIBLE);
+            tv_no_task.setVisibility(View.INVISIBLE);
+            tasksAdapter = new TasksAdapter(monthTasks); // Replace "monthTasks" with your month-based task list
+            recyclerView.setAdapter(tasksAdapter);
+            Log.d("MonthTasks", "Size: " + monthTasks.size());
         } else {
             calendarView.setVisibility(View.VISIBLE);
+            //render today tasks in adapter
+            // Render todayTasks in the adapter
+            tasksAdapter = new TasksAdapter(todayTasks); // Use your existing todayTasks list
+            recyclerView.setAdapter(tasksAdapter);
         }
+//        tasksAdapter.notifyDataSetChanged();
     }
 
     // Function to filter tasks type
@@ -124,7 +146,7 @@ public class TasksFragment extends Fragment {
         }
 
         for (TaskModel task : taskList) {
-            if (type.equals(task.getType())) { // Compare with the `type` field
+            if (type.equalsIgnoreCase(task.getType())) { // Compare with the `type` field
                 filteredList.add(task);
             }
         }
@@ -157,6 +179,38 @@ public class TasksFragment extends Fragment {
         }
         return todayTasks;
     }
+
+    private static List<TaskModel> getTasksByMonth(List<TaskModel> allTasks, String selectedMonth) {
+        monthTasks.clear();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm"); // Adjust format as needed
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM"); // Extract month in "MM" format
+
+        for (TaskModel task : allTasks) {
+            String startTime = task.getStartTime();
+            Log.e("month time", startTime);
+            Log.e("month time", selectedMonth);
+            // Ensure startTime is not null or empty
+            if (startTime != null && !startTime.isEmpty()) {
+                try {
+                    // Parse the date from startTime
+                    Date taskDate = dateFormat.parse(startTime); // Only the date part
+                    String taskMonth = monthFormat.format(taskDate); // Extract the month
+//                    Log.e("month time task", taskMonth);
+//                    Log.e("month time task", "hello");
+                    // Compare with the selected month
+                    if (selectedMonth.equals(taskMonth)) {
+                        monthTasks.add(task); // Add the task to the filtered list
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace(); // Handle parse errors
+                    Log.e("month time task", "error");
+                }
+            }
+        }
+
+        return monthTasks;
+    }
+
 
 
     private void updateDailyTasks(String selectedDate) {
@@ -234,6 +288,7 @@ public class TasksFragment extends Fragment {
                             //fetch the latest data again from firebase
                             taskAPI.fetchTasks(()->{
                                 taskList = Task.getInstance().getTaskList();
+                                getTasksByMonth(taskList,currentMonth);
                                 getTodayTasks(taskList,selectedDate);
                                 tasksAdapter.notifyDataSetChanged();
                             });
