@@ -60,20 +60,17 @@ public class DashboardFragment extends Fragment {
         final TextView name = binding.profileUserFullName;
         dashboardViewModel.getUserFullName().observe(getViewLifecycleOwner(),
                 name::setText);
-        name.setOnClickListener(v -> dashboardViewModel.loadUserFullName());
         dashboardViewModel.loadUserFullName();
 
         // Photo
         final ImageView photo = binding.profileImage;
         Uri photoUrl = User.getInstance().getPhotoUrl();
         loadProfilePhoto(photoUrl, photo);
-        photo.setOnClickListener(v -> loadProfilePhoto(photoUrl, photo));
 
         // User description
         final TextView description = binding.descriptionText;
         dashboardViewModel.getUserDescription().observe(getViewLifecycleOwner(),
                 description::setText);
-        description.setOnClickListener(v -> loadDescription(true));
         loadDescription(true);
 
         return root;
@@ -87,12 +84,6 @@ public class DashboardFragment extends Fragment {
 
     public void loadDescription(boolean needFetch) {
         dashboardViewModel.loadUserDescription(needFetch);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadDescription(false);
     }
 
     @Override

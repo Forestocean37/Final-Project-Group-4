@@ -94,11 +94,13 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
 
         // Cancel without saving
-        cancelButton.setOnClickListener(view -> whenFinish());
+        cancelButton.setOnClickListener(view -> finish());
     }
 
     private void whenFinish() {
         User.getInstance().fetchUserDescription();
+        Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 }
