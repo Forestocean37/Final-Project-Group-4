@@ -53,6 +53,24 @@ public class HomeFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.navigation_tasks, bundle);
         });
 
+        binding.buttonFree.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("task_type", "Free");
+            Navigation.findNavController(v).navigate(R.id.navigation_tasks, bundle);
+        });
+
+        binding.buttonWork.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("task_type", "Work");
+            Navigation.findNavController(v).navigate(R.id.navigation_tasks, bundle);
+        });
+
+        binding.buttonToDoList.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("task_type", "To do list");
+            Navigation.findNavController(v).navigate(R.id.navigation_tasks, bundle);
+        });
+
         renderContents();
 
         return root;
