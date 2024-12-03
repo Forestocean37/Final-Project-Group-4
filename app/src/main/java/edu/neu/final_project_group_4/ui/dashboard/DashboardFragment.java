@@ -66,19 +66,23 @@ public class DashboardFragment extends Fragment {
         // Photo
         final ImageView photo = binding.profileImage;
         Uri photoUrl = User.getInstance().getPhotoUrl();
-        if (photoUrl != null) {
-            Log.d("Dashboard", "Photo Url: " + photoUrl);
-            Glide.with(this).load(photoUrl).into(photo);
-        }
+        loadProfilePhoto(photoUrl, photo);
+        photo.setOnClickListener(v -> loadProfilePhoto(photoUrl, photo));
 
         // User description
         final TextView description = binding.descriptionText;
         dashboardViewModel.getUserDescription().observe(getViewLifecycleOwner(),
                 description::setText);
-        description.setOnClickListener(v -> loadDescription(false));
+        description.setOnClickListener(v -> loadDescription(true));
         loadDescription(true);
 
         return root;
+    }
+
+    private void loadProfilePhoto(Uri photoUrl, ImageView imageView) {
+        if (photoUrl != null) {
+            Glide.with(this).load(photoUrl).into(imageView);
+        }
     }
 
     public void loadDescription(boolean needFetch) {
