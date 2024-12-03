@@ -41,6 +41,38 @@
         app:layout_constraintWidth_percent="0.6"
         android:layout_marginTop="10dp" />
 
+    <TextView
+        android:id="@+id/name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Name"
+        android:textSize="20sp"
+        android:textColor="#333333"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="60dp"
+        app:layout_constraintTop_toBottomOf="@id/upload_picture_button"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/name_box"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter your full name..."
+        android:textSize="10sp"
+        android:background="@android:color/white"
+        android:gravity="top|start"
+        android:padding="8dp"
+        android:inputType="textPersonName"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:elevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name_label"
+        />
+
     <!-- Description Box -->
     <TextView
         android:id="@+id/description_label"
@@ -52,7 +84,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="60dp"
-        app:layout_constraintTop_toBottomOf="@id/upload_picture_button"
+        app:layout_constraintTop_toBottomOf="@id/name_box"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -70,7 +102,7 @@
         android:layout_marginEnd="15dp"
         android:elevation="4dp"
         app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent="0.4"
+        app:layout_constraintHeight_percent="0.25"
         app:layout_constraintTop_toBottomOf="@id/description_label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

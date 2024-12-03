@@ -1,29 +1,37 @@
 package edu.neu.final_project_group_4.ui.dashboard;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+
+import com.bumptech.glide.Glide;
 
 import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.databinding.FragmentDashboardBinding;
 import edu.neu.final_project_group_4.utils.Auth;
+import edu.neu.final_project_group_4.utils.User;
 
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
+    private DashboardViewModel dashboardViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DashboardViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -47,8 +55,40 @@ public class DashboardFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        
+        // User full name
+        final TextView name = binding.profileUserFullName;
+        dashboardViewModel.getUserFullName().observe(getViewLifecycleOwner(),
+                name::setText);
+        name.setOnClickListener(v -> dashboardViewModel.loadUserFullName());
+        dashboardViewModel.loadUserFullName();
+
+        // Photo
+        final ImageView photo = binding.profileImage;
+        Uri photoUrl = User.getInstance().getPhotoUrl();
+        if (photoUrl != null) {
+            Log.d("Dashboard", "Photo Url: " + photoUrl);
+            Glide.with(this).load(photoUrl).into(photo);
+        }
+
+        // User description
+        final TextView description = binding.descriptionText;
+        dashboardViewModel.getUserDescription().observe(getViewLifecycleOwner(),
+                description::setText);
+        description.setOnClickListener(v -> loadDescription(false));
+        loadDescription(true);
 
         return root;
+    }
+
+    public void loadDescription(boolean needFetch) {
+        dashboardViewModel.loadUserDescription(needFetch);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadDescription(false);
     }
 
     @Override

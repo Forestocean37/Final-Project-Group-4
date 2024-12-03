@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
+import edu.neu.final_project_group_4.LoginActivity;
+import edu.neu.final_project_group_4.MainActivity;
 import edu.neu.final_project_group_4.R;
 import edu.neu.final_project_group_4.utils.User;
 
@@ -76,14 +79,19 @@ public class ProfileEditActivity extends AppCompatActivity {
 
             if (selectedImageUri != null) {
                 user.updateProfilePhoto(selectedImageUri.toString());
+                Log.d("ProfileEdit", "Photo Url: " + selectedImageUri);
             }
 
             Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-            finish();
+            whenFinish();
         });
 
         // Cancel without saving
-        cancelButton.setOnClickListener(view -> finish());
+        cancelButton.setOnClickListener(view -> whenFinish());
+    }
+
+    private void whenFinish() {
+        User.getInstance().fetchUserDescription();
+        finish();
     }
 }
-
