@@ -397,8 +397,12 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -478,30 +482,126 @@ public class AiViewModel extends ViewModel {
         });
     }
 
+//    public void summarizeTasks(String timeframe) {
+//        List<TaskModel> tasksInTimeframe = getTasksInTimeframe(timeframe);
+//        StringBuilder prompt = new StringBuilder();
+//        prompt.append("Please summarize my tasks for the ").append(timeframe.toLowerCase()).append(".\n");
+//
+//        for (TaskModel task : tasksInTimeframe) {
+//            prompt.append("- ").append(task.getTitle())
+//                    .append(": ").append(task.getDescription())
+//                    .append(" on ").append(task.getStartTime()).append("\n");
+//        }
+//
+//        if (tasksInTimeframe.isEmpty()) {
+//            prompt.append("I have no tasks for the ").append(timeframe.toLowerCase()).append(".");
+//        }
+//
+//        addMessage(prompt.toString(), true); // Add user's message
+//        sendMessageToAI(prompt.toString()); // Send prompt to AI
+//    }
+
     public void summarizeTasks(String timeframe) {
         List<TaskModel> tasksInTimeframe = getTasksInTimeframe(timeframe);
-        StringBuilder prompt = new StringBuilder();
-        prompt.append("Please summarize my tasks for the ").append(timeframe.toLowerCase()).append(".\n");
+        Map<String, List<TaskModel>> tasksByType = new HashMap<>();
 
+        // Group tasks by type
         for (TaskModel task : tasksInTimeframe) {
-            prompt.append("- ").append(task.getTitle())
-                    .append(": ").append(task.getDescription())
-                    .append(" on ").append(task.getStartTime()).append("\n");
+            tasksByType.computeIfAbsent(task.getType(), k -> new ArrayList<>()).add(task);
         }
+
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("Summarize my tasks for the ").append(timeframe.toLowerCase()).append(" grouped by type:\n");
 
         if (tasksInTimeframe.isEmpty()) {
-            prompt.append("I have no tasks for the ").append(timeframe.toLowerCase()).append(".");
+            prompt.append("No tasks for the ").append(timeframe.toLowerCase()).append(".");
+        } else {
+            for (Map.Entry<String, List<TaskModel>> entry : tasksByType.entrySet()) {
+                prompt.append(entry.getKey()).append(":\n");
+                for (TaskModel task : entry.getValue()) {
+                    prompt.append("- ").append(task.getTitle())
+                            .append(": ").append(task.getDescription())
+                            .append(" at ").append(task.getStartTime()).append("\n");
+                }
+            }
         }
 
-        addMessage(prompt.toString(), true); // Add user's message
-        sendMessageToAI(prompt.toString()); // Send prompt to AI
+        addMessage(prompt.toString(), true);
+        sendMessageToAI(prompt.toString());
     }
 
+
+//    public void suggestFreeTimeSlots(String timeframe) {
+//        List<TaskModel> tasks = tasksLiveData.getValue();
+//        if (tasks == null || tasks.isEmpty()) {
+//            addMessage("No tasks found to analyze free time slots.", false);
+//            return;
+//        }
+//
+//        StringBuilder prompt = new StringBuilder("Based on my tasks, please suggest some free time slots for the ")
+//                .append(timeframe.toLowerCase()).append(".\n");
+//        prompt.append("Here are my scheduled tasks:\n");
+//
+//        for (TaskModel task : tasks) {
+//            prompt.append("- ").append(task.getTitle())
+//                    .append(": ").append(task.getDescription())
+//                    .append(" at ").append(task.getStartTime())
+//                    .append(" (").append(task.getType()).append(")")
+//                    .append("\n");
+//        }
+//
+//        addMessage(prompt.toString(), true); // Add user's message to the chat
+//        sendMessageToAI(prompt.toString()); // Send to AI for suggestions
+//    }
+
+
     public void suggestFreeTimeSlots(String timeframe) {
-        String prompt = "Please suggest some free time slots for the " + timeframe.toLowerCase() + ".";
-        addMessage(prompt, true); // Add user's message
-        sendMessageToAI(prompt);
+        List<TaskModel> tasks = getTasksInTimeframe(timeframe);
+
+        if (tasks.isEmpty()) {
+            addMessage("No tasks found for the " + timeframe.toLowerCase() + ".", true);
+            return;
+        }
+
+        tasks.sort(Comparator.comparing(TaskModel::getStartTime));
+
+        // Analyze task distribution
+        Map<String, List<TaskModel>> taskByDay = new HashMap<>();
+        for (TaskModel task : tasks) {
+            String day = task.getStartTime().split(" ")[0]; // Get the date portion
+            taskByDay.computeIfAbsent(day, k -> new ArrayList<>()).add(task);
+        }
+
+        // Identify overloaded days
+        StringBuilder prompt = new StringBuilder("Please suggest better scheduling for tasks:\n");
+        for (Map.Entry<String, List<TaskModel>> entry : taskByDay.entrySet()) {
+            String day = entry.getKey();
+            List<TaskModel> dayTasks = entry.getValue();
+
+            if (dayTasks.size() > 3) { // Overloaded day
+                prompt.append("Overloaded day: ").append(day).append("\nTasks:\n");
+                for (TaskModel task : dayTasks) {
+                    prompt.append("- ").append(task.getTitle()).append(" at ").append(task.getStartTime()).append("\n");
+                }
+            }
+        }
+
+        // Include less busy days
+        prompt.append("\nSuggest rescheduling to these less busy days:\n");
+        for (Map.Entry<String, List<TaskModel>> entry : taskByDay.entrySet()) {
+            String day = entry.getKey();
+            List<TaskModel> dayTasks = entry.getValue();
+
+            if (dayTasks.size() <= 2) { // Less busy day
+                prompt.append("- ").append(day).append("\n");
+            }
+        }
+
+        addMessage(prompt.toString(), true);
+        sendMessageToAI(prompt.toString());
     }
+
+
 
     public void confirmReschedule(TaskModel task, String newDate) {
         if (task != null) {
@@ -512,12 +612,38 @@ public class AiViewModel extends ViewModel {
         }
     }
 
+//    public void prioritizeTasks() {
+//        StringBuilder prompt = new StringBuilder("Please prioritize my tasks based on deadlines, complexity, and importance.\n");
+//        for (TaskModel task : tasksLiveData.getValue()) {
+//            prompt.append("- ").append(task.getTitle())
+//                    .append(": ").append(task.getDescription())
+//                    .append(", Deadline: ").append(task.getStartTime())
+//                    .append(", Type: ").append(task.getType())
+//                    .append("\n");
+//        }
+//
+//        addMessage(prompt.toString(), true);
+//        sendMessageToAI(prompt.toString());
+//    }
+
     public void prioritizeTasks() {
-        StringBuilder prompt = new StringBuilder("Please prioritize my tasks based on deadlines, complexity, and importance.\n");
-        for (TaskModel task : tasksLiveData.getValue()) {
+        List<TaskModel> tasks = tasksLiveData.getValue();
+        if (tasks == null || tasks.isEmpty()) {
+            addMessage("No tasks to prioritize.", true);
+            return;
+        }
+
+        tasks.sort((task1, task2) -> {
+            LocalDateTime time1 = Task.getInstance().convertToTime(task1.getStartTime());
+            LocalDateTime time2 = Task.getInstance().convertToTime(task2.getStartTime());
+            return time1.compareTo(time2);
+        });
+
+        StringBuilder prompt = new StringBuilder("Prioritize my tasks:\n");
+        for (TaskModel task : tasks) {
             prompt.append("- ").append(task.getTitle())
                     .append(": ").append(task.getDescription())
-                    .append(", Deadline: ").append(task.getStartTime())
+                    .append(", Scheduled at: ").append(task.getStartTime())
                     .append(", Type: ").append(task.getType())
                     .append("\n");
         }
@@ -526,18 +652,59 @@ public class AiViewModel extends ViewModel {
         sendMessageToAI(prompt.toString());
     }
 
+
+//    public void viewInsights() {
+//        String prompt = "Please provide insights on my productivity based on my task completion data.";
+//        addMessage(prompt, true);
+//        sendMessageToAI(prompt);
+//    }
+
     public void viewInsights() {
-        String prompt = "Please provide insights on my productivity based on my task completion data.";
+        List<TaskModel> completedTasks = new ArrayList<>();
+
+        // Fetch completed tasks
+        if (tasksLiveData.getValue() != null) {
+            for (TaskModel task : tasksLiveData.getValue()) {
+                if (task.isCompleted()) {
+                    completedTasks.add(task);
+                }
+            }
+        }
+
+        // Prepare AI prompt
+        StringBuilder prompt = new StringBuilder("Please analyze my productivity based on the following completed tasks:\n");
+
+        if (completedTasks.isEmpty()) {
+            prompt.append("No completed tasks to analyze.");
+        } else {
+            for (TaskModel task : completedTasks) {
+                prompt.append("- ").append(task.getTitle())
+                        .append(": ").append(task.getDescription())
+                        .append(", Completed on: ").append(task.getStartTime())
+                        .append(", Type: ").append(task.getType())
+                        .append("\n");
+            }
+        }
+
+        addMessage(prompt.toString(), true);
+        sendMessageToAI(prompt.toString());
+    }
+
+
+//    public void breakDownTask(TaskModel task) {
+//        String prompt = "Please break down the following task into subtasks:\n"
+//                + task.getTitle() + ": " + task.getDescription();
+//        addMessage(prompt, true);
+//        sendMessageToAI(prompt);
+//    }
+
+    public void breakDownTask(TaskModel task) {
+        String prompt = "Break down the task into subtasks:\n"
+                + task.getTitle() + ": " + task.getDescription() + ", Scheduled at: " + task.getStartTime();
         addMessage(prompt, true);
         sendMessageToAI(prompt);
     }
 
-    public void breakDownTask(TaskModel task) {
-        String prompt = "Please break down the following task into subtasks:\n"
-                + task.getTitle() + ": " + task.getDescription();
-        addMessage(prompt, true);
-        sendMessageToAI(prompt);
-    }
 
     public void adjustDeadlines() {
         StringBuilder prompt = new StringBuilder("Please suggest new deadlines for overloaded days.\n");
@@ -553,24 +720,63 @@ public class AiViewModel extends ViewModel {
         sendMessageToAI(prompt.toString());
     }
 
+//    public void reviewTasks() {
+//        List<TaskModel> completedTasks = new ArrayList<>();
+//
+//        // Filter tasks that are marked as completed
+//        if (tasksLiveData.getValue() != null) {
+//            for (TaskModel task : tasksLiveData.getValue()) {
+//                if (task.isCompleted()) {
+//                    completedTasks.add(task);
+//                }
+//            }
+//        }
+//
+//        if (completedTasks.isEmpty()) {
+//            addMessage("No completed tasks to review.", true);
+//            sendMessageToAI("No completed tasks found.");
+//            return;
+//        }
+//
+//        // Prepare AI prompt with completed tasks
+//        StringBuilder prompt = new StringBuilder("Please review my completed tasks and provide feedback:\n");
+//        for (TaskModel task : completedTasks) {
+//            prompt.append("- ").append(task.getTitle())
+//                    .append(": ").append(task.getDescription())
+//                    .append(", Completed on: ").append(task.getStartTime())
+//                    .append("\n");
+//        }
+//
+//        addMessage(prompt.toString(), true); // Add user's message
+//        sendMessageToAI(prompt.toString()); // Send prompt to AI
+//    }
+
     public void reviewTasks() {
-        StringBuilder prompt = new StringBuilder("Please review my completed tasks and provide feedback and suggestions.\n");
-        for (TaskModel task : tasksLiveData.getValue()) {
-            if (task.isCompleted()) {
-                prompt.append("- ").append(task.getTitle())
-                        .append(": ").append(task.getDescription())
-                        .append(", Completed on: ").append(task.getStartTime())
-                        .append("\n");
+        List<TaskModel> completedTasks = new ArrayList<>();
+
+        if (tasksLiveData.getValue() != null) {
+            for (TaskModel task : tasksLiveData.getValue()) {
+                if (task.isCompleted()) {
+                    completedTasks.add(task);
+                }
             }
         }
 
-        if (prompt.toString().equals("Please review my completed tasks and provide feedback and suggestions.\n")) {
-            prompt.append("I have not completed any tasks yet.");
+        StringBuilder prompt = new StringBuilder("Review my completed tasks and provide suggestions for improvement:\n");
+        if (completedTasks.isEmpty()) {
+            prompt.append("No completed tasks found.");
+        } else {
+            for (TaskModel task : completedTasks) {
+                prompt.append("- ").append(task.getTitle())
+                        .append(": ").append(task.getDescription())
+                        .append(", Completed on: ").append(task.getStartTime()).append("\n");
+            }
         }
 
         addMessage(prompt.toString(), true);
         sendMessageToAI(prompt.toString());
     }
+
 
     private List<TaskModel> getTasksInTimeframe(String timeframe) {
         List<TaskModel> tasksInTimeframe = new ArrayList<>();
