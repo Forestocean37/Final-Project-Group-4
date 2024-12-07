@@ -661,6 +661,348 @@
 //    }
 //}
 
+
+
+// 12.6 change code
+
+//package edu.neu.final_project_group_4.ui.ai;
+//import android.app.DatePickerDialog;
+//import android.os.Bundle;
+//import android.util.Log;
+//import android.view.LayoutInflater;
+//import android.view.View;
+//import android.view.ViewGroup;
+//import android.widget.Button;
+//import android.widget.LinearLayout;
+//import android.widget.TextView;
+//import android.widget.Toast;
+//
+//
+//import androidx.annotation.NonNull;
+//import androidx.fragment.app.Fragment;
+//import androidx.lifecycle.ViewModelProvider;
+//import androidx.recyclerview.widget.LinearLayoutManager;
+//
+//import java.util.Calendar;
+//import java.util.List;
+//
+//import edu.neu.final_project_group_4.R;
+//import edu.neu.final_project_group_4.databinding.FragmentAiBinding;
+//import edu.neu.final_project_group_4.models.TaskModel;
+//import edu.neu.final_project_group_4.utils.Task;
+//
+//public class AiFragment extends Fragment {
+//
+//    private Button buttonPrioritize;
+//    private Button buttonViewInsights;
+//    private Button buttonBreakDownTask;
+//    private Button buttonAdjustDeadlines;
+//    private Button buttonReviewTasks;
+//
+//    private FragmentAiBinding binding;
+//    private ChatAdapter chatAdapter;
+//    private AiViewModel aiViewModel;
+//    private boolean isMenuExpanded = false;
+//
+//    @Override
+//    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        binding = FragmentAiBinding.inflate(inflater, container, false);
+//        View root = binding.getRoot();
+//
+//        // Initialize ViewModel and ChatAdapter
+//        aiViewModel = new ViewModelProvider(this).get(AiViewModel.class);
+//        chatAdapter = new ChatAdapter();
+//
+//        // Setup RecyclerView
+//        binding.recyclerViewResponses.setLayoutManager(new LinearLayoutManager(getContext()));
+//        binding.recyclerViewResponses.setAdapter(chatAdapter);
+//
+//        // Observe chat messages
+//        aiViewModel.getChatMessages().observe(getViewLifecycleOwner(), messages -> {
+//            Log.d("AiFragment", "Messages received: " + messages.size());
+//            chatAdapter.setMessages(messages);
+//            binding.recyclerViewResponses.scrollToPosition(messages.size() - 1);
+//        });
+//
+//
+//        // Observe tasks
+//        aiViewModel.getTasksLiveData().observe(getViewLifecycleOwner(), tasks -> {
+//            // Update UI components when tasks are fetched
+//            Log.d("AiFragment", "Fetched tasks: " + tasks.size());
+//        });
+//
+//        // Initialize new buttons
+//        buttonPrioritize = binding.buttonPrioritize;
+//        buttonViewInsights = binding.buttonViewInsights;
+//        buttonBreakDownTask = binding.buttonBreakDownTask;
+//        buttonAdjustDeadlines = binding.buttonAdjustDeadlines;
+//        buttonReviewTasks = binding.buttonReviewTasks;
+//
+//        // Show initial state
+//        showInitialState();
+//        setupClickListeners();
+//
+//
+//        return root;
+//    }
+//
+//    private void showInitialState() {
+//        // Directly show collapsed menu and RecyclerView
+//        binding.collapsedMenu.setVisibility(View.VISIBLE);
+//        binding.recyclerViewResponses.setVisibility(View.VISIBLE);
+//
+//        // Hide expanded menu initially
+//        binding.expandedMenu.setVisibility(View.GONE);
+//        binding.scrollViewOptions.setVisibility(View.GONE);
+//
+//        // Clear any existing buttons in the scroll view
+//        binding.buttonLayout.removeAllViews();
+//    }
+//
+//    private void setupMenuClickListeners() {
+//        binding.collapsedMenu.setOnClickListener(v -> {
+//            if (isMenuExpanded) {
+//                collapseMenu();
+//            } else {
+//                expandMenu();
+//            }
+//        });
+//    }
+//
+//
+//    private void setupMessageInput() {
+//        binding.buttonSendMessage.setOnClickListener(v -> {
+//            String message = binding.editTextMessage.getText().toString().trim();
+//            if (!message.isEmpty()) {
+//                aiViewModel.sendMessageToAI(message); // Send message to AI ViewModel
+//                binding.editTextMessage.setText(""); // Clear the input field
+//            } else {
+//                Toast.makeText(getContext(), "Message cannot be empty!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//
+//
+//
+//    private void setupClickListeners() {
+//        // Collapsed menu click logic (toggle Show More / Show Less)
+//        binding.collapsedMenu.setOnClickListener(v -> {
+//            if (isMenuExpanded) {
+//                collapseMenu();
+//            } else {
+//                expandMenu();
+//            }
+//        });
+//
+//        // Menu text click logic
+//        TextView menuText = binding.collapsedMenu.findViewById(R.id.menuText);
+//        menuText.setOnClickListener(v -> {
+//            if (isMenuExpanded) {
+//                collapseMenu();
+//            } else {
+//                expandMenu();
+//            }
+//        });
+//
+//        // Add listeners for all menu buttons (no changes here)
+//        binding.buttonSummarize.setOnClickListener(v -> {
+//            collapseMenu();
+//            showTimeframeOptions("summarize");
+//        });
+//
+//        binding.buttonReschedule.setOnClickListener(v -> {
+//            collapseMenu();
+//            showTaskSelection();
+//        });
+//
+//        binding.buttonSuggest.setOnClickListener(v -> {
+//            collapseMenu();
+//            showTimeframeOptions("suggest");
+//        });
+//
+//        buttonPrioritize.setOnClickListener(v -> {
+//            collapseMenu();
+//            aiViewModel.prioritizeTasks();
+//        });
+//
+//        buttonViewInsights.setOnClickListener(v -> {
+//            collapseMenu();
+//            aiViewModel.viewInsights();
+//        });
+//
+//        buttonBreakDownTask.setOnClickListener(v -> {
+//            collapseMenu();
+//            showTaskSelectionForBreakdown();
+//        });
+//
+//        buttonAdjustDeadlines.setOnClickListener(v -> {
+//            collapseMenu();
+//            aiViewModel.adjustDeadlines();
+//        });
+//
+//        buttonReviewTasks.setOnClickListener(v -> {
+//            collapseMenu();
+//            aiViewModel.reviewTasks();
+//        });
+//    }
+//
+//    private void expandMenu() {
+//        isMenuExpanded = true;
+//        binding.expandedMenu.setVisibility(View.VISIBLE);
+//
+//        // Update "Show More" to "Show Less"
+//        TextView menuText = binding.collapsedMenu.findViewById(R.id.menuText);
+//        menuText.setText("Show Less");
+//    }
+//
+//    private void collapseMenu() {
+//        isMenuExpanded = false;
+//        binding.expandedMenu.setVisibility(View.GONE);
+//
+//        // Update "Show Less" to "Show More"
+//        TextView menuText = binding.collapsedMenu.findViewById(R.id.menuText);
+//        menuText.setText("Show More");
+//    }
+//
+//    // Show options for Summarize and Suggest
+//    private void showTimeframeOptions(String actionType) {
+//        binding.buttonLayout.removeAllViews();
+//        binding.scrollViewOptions.setVisibility(View.VISIBLE);
+//
+//        String[] timeframes = {"Daily", "Weekly", "Monthly"};
+//
+//        for (String timeframe : timeframes) {
+//            Button timeframeButton = new Button(getContext());
+//            timeframeButton.setText(timeframe);
+//            timeframeButton.setLayoutParams(new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//            ));
+//
+//            timeframeButton.setOnClickListener(v -> {
+//                handleTimeframeSelection(actionType, timeframe);
+//                binding.scrollViewOptions.setVisibility(View.GONE);
+//            });
+//
+//            binding.buttonLayout.addView(timeframeButton);
+//        }
+//    }
+//
+//    private void handleTimeframeSelection(String actionType, String timeframe) {
+//        if (actionType.equals("summarize")) {
+//            aiViewModel.summarizeTasks(timeframe);
+//        } else if (actionType.equals("suggest")) {
+//            aiViewModel.suggestFreeTimeSlots(timeframe);
+//        } else {
+//            aiViewModel.sendMessageToAI("Invalid action.");
+//        }
+//        binding.buttonLayout.removeAllViews();
+//    }
+//
+//    // Show task selection for Reschedule
+//    private void showTaskSelection() {
+//        binding.buttonLayout.removeAllViews();
+//        binding.scrollViewOptions.setVisibility(View.VISIBLE);
+//
+//        List<TaskModel> tasks = aiViewModel.getTasksLiveData().getValue();
+//        if (tasks == null || tasks.isEmpty()) {
+//            aiViewModel.sendMessageToAI("No tasks available to reschedule.");
+//            return;
+//        }
+//
+//        for (TaskModel task : tasks) {
+//            Button taskButton = new Button(getContext());
+//            taskButton.setText(task.getTitle() + " - " + task.getStartTime());
+//            taskButton.setLayoutParams(new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//            ));
+//
+//            taskButton.setOnClickListener(v -> {
+//                aiViewModel.setSelectedTask(task);
+//                aiViewModel.sendMessageToAI("You've chosen to reschedule: " + task.getTitle());
+//                showDatePicker(task);
+//            });
+//
+//            binding.buttonLayout.addView(taskButton);
+//        }
+//    }
+//
+//    private void showDatePicker(TaskModel selectedTask) {
+//        Calendar calendar = Calendar.getInstance();
+//        DatePickerDialog datePickerDialog = new DatePickerDialog(
+//                requireContext(),
+//                (view, year, month, day) -> {
+//                    String newDate = String.format("%02d/%02d/%d", month + 1, day, year);
+//                    aiViewModel.sendMessageToAI("Rescheduled '" + selectedTask.getTitle() + "' to " + newDate);
+//                    showConfirmRescheduleButton(selectedTask, newDate);
+//                },
+//                calendar.get(Calendar.YEAR),
+//                calendar.get(Calendar.MONTH),
+//                calendar.get(Calendar.DAY_OF_MONTH)
+//        );
+//        datePickerDialog.show();
+//    }
+//
+//    private void showConfirmRescheduleButton(TaskModel task, String newDate) {
+//        binding.buttonLayout.removeAllViews();
+//
+//        Button confirmButton = new Button(getContext());
+//        confirmButton.setText("Confirm Reschedule for " + newDate);
+//        confirmButton.setLayoutParams(new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//        ));
+//
+//        confirmButton.setOnClickListener(v -> {
+//            aiViewModel.sendMessageToAI("Task '" + task.getTitle() + "' rescheduled to " + newDate);
+//            aiViewModel.confirmReschedule(task, newDate);
+//            binding.scrollViewOptions.setVisibility(View.GONE);
+//            binding.buttonLayout.removeAllViews();
+//        });
+//
+//        binding.buttonLayout.addView(confirmButton);
+//    }
+//
+//    private void showTaskSelectionForBreakdown() {
+//        binding.buttonLayout.removeAllViews();
+//        binding.scrollViewOptions.setVisibility(View.VISIBLE);
+//
+//        List<TaskModel> tasks = aiViewModel.getTasksLiveData().getValue();
+//        if (tasks == null || tasks.isEmpty()) {
+//            aiViewModel.addMessage("No tasks available to break down.", false);
+//            return;
+//        }
+//
+//        for (TaskModel task : tasks) {
+//            Button taskButton = new Button(getContext());
+//            taskButton.setText(task.getTitle());
+//            taskButton.setLayoutParams(new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//            ));
+//
+//            taskButton.setOnClickListener(v -> {
+//                aiViewModel.setSelectedTask(task);
+//                aiViewModel.breakDownTask(task);
+//                binding.scrollViewOptions.setVisibility(View.GONE);
+//                binding.buttonLayout.removeAllViews();
+//            });
+//
+//            binding.buttonLayout.addView(taskButton);
+//        }
+//    }
+//
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        binding = null;
+//    }
+//}
+
+
+
+
 package edu.neu.final_project_group_4.ui.ai;
 
 import android.app.DatePickerDialog;
@@ -715,6 +1057,23 @@ public class AiFragment extends Fragment {
             binding.recyclerViewResponses.scrollToPosition(messages.size() - 1);
         });
 
+
+        binding.buttonSendMessage.setOnClickListener(v -> {
+            String message = binding.editTextMessage.getText().toString().trim();
+
+            if (!message.isEmpty()) {
+                // Add the user's message to the chat
+                aiViewModel.addMessage(message, true);
+
+                // Clear the input box after sending
+                binding.editTextMessage.setText("");
+
+                // Optionally send the message to AI for a response
+                aiViewModel.sendMessageToAI(message);
+            }
+        });
+
+
         // Observe tasks
         aiViewModel.getTasksLiveData().observe(getViewLifecycleOwner(), tasks -> {
             // Update UI components when tasks are fetched
@@ -729,29 +1088,14 @@ public class AiFragment extends Fragment {
         buttonReviewTasks = binding.buttonReviewTasks;
 
         // Show initial state
-        showInitialState();
+//        showInitialState();
         setupClickListeners();
 
         return root;
     }
 
-    private void showInitialState() {
-        binding.buttonAskGenAi.setVisibility(View.VISIBLE);
-        binding.recyclerViewResponses.setVisibility(View.GONE);
-        binding.collapsedMenu.setVisibility(View.GONE);
-        binding.expandedMenu.setVisibility(View.GONE);
-        binding.scrollViewOptions.setVisibility(View.GONE);
-        binding.buttonLayout.removeAllViews();
-    }
 
     private void setupClickListeners() {
-        // Ask GenAI button
-        binding.buttonAskGenAi.setOnClickListener(v -> {
-            binding.buttonAskGenAi.setVisibility(View.GONE);
-            binding.collapsedMenu.setVisibility(View.VISIBLE);
-            binding.recyclerViewResponses.setVisibility(View.VISIBLE);
-            aiViewModel.sendMessageToAI("Hi");
-        });
 
         // Collapsed menu (< icon)
         binding.collapsedMenu.setOnClickListener(v -> {
