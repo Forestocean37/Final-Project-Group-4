@@ -99,8 +99,10 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     private void whenFinish() {
         User.getInstance().fetchUserDescription();
-        Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
-        startActivity(intent);
+
+        // Set result for returning to ProfileActivity
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
         finish();
     }
 }
