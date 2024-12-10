@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -72,6 +75,11 @@ public class DashboardFragment extends Fragment {
         dashboardViewModel.getUserDescription().observe(getViewLifecycleOwner(),
                 description::setText);
         loadDescription(true);
+
+        // Set the current date dynamically in the TextView
+        TextView dateText = binding.dateText;
+        String currentDate = new SimpleDateFormat("EEEE, d MMM", Locale.getDefault()).format(new Date());
+        dateText.setText(currentDate);
 
         return root;
     }
