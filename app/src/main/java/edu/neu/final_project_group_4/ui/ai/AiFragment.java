@@ -1062,16 +1062,14 @@ public class AiFragment extends Fragment {
             String message = binding.editTextMessage.getText().toString().trim();
 
             if (!message.isEmpty()) {
-                // Add the user's message to the chat
-                aiViewModel.addMessage(message, true);
+                // Send message with task data to AI
+                aiViewModel.sendMessageToAIWithTasks(message);
 
                 // Clear the input box after sending
                 binding.editTextMessage.setText("");
-
-                // Optionally send the message to AI for a response
-                aiViewModel.sendMessageToAI(message);
             }
         });
+
 
 
         // Observe tasks
