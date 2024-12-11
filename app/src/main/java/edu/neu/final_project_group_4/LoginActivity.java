@@ -14,6 +14,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.firebase.auth.ActionCodeSettings;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,16 +42,28 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startSignInFlow() {
+        ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
+                .setAndroidPackageName(
+                        "edu.neu.final_project_group_4",
+                        true,
+                        "28")
+                .setHandleCodeInApp(true)
+                .setUrl("https://finalprojectgroup4.page.link")
+                .build();
+
         List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build()
-                //new AuthUI.IdpConfig.PhoneBuilder().build()
+                //new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.EmailBuilder()
+                        //.enableEmailLinkSignIn()
+                        //.setActionCodeSettings(actionCodeSettings)
+                        .build()
         );
 
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .setLogo(R.drawable.ic_logo)
-                .setTheme(R.style.Theme_FinalProjectGroup4)
+                .setTheme(R.style.CustomAuthUITheme)
                 .build();
 
         signInLauncher.launch(signInIntent);
