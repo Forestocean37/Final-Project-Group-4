@@ -197,7 +197,9 @@ public class AddTaskFragment extends Fragment {
                     Toast.makeText(requireContext(), "successfully Add task", Toast.LENGTH_SHORT).show();
                 }
                 NavController navController = Navigation.findNavController(v);
-                navController.navigate(R.id.navigation_home);
+                Bundle bundle = new Bundle();
+                bundle.putString("startTime", startTime);
+                navController.navigate(R.id.navigation_tasks,bundle);
 
             }else{
                 Toast.makeText(requireContext(), "Type: please fill out all the blank", Toast.LENGTH_SHORT).show();

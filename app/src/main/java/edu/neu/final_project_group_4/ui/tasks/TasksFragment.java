@@ -57,6 +57,26 @@ public class TasksFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_tasks, container, false);
         selectedDate = dateFormat.format(new Date());
+
+        // Check if the bundle contains the "startTime" key
+        if (getArguments() != null && getArguments().containsKey("startTime")) {
+            String startTime = getArguments().getString("startTime");
+            if (startTime != null) {
+                try {
+                    // Parse the startTime to extract only the date part
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+                    Date startDate = inputFormat.parse(startTime);
+
+                    if (startDate != null) {
+                        selectedDate = dateFormat.format(startDate); // Format the date to "dd-MM-yyyy"
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(requireContext(), "Invalid date format in startTime", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
         Toast.makeText(requireContext(), selectedDate, Toast.LENGTH_SHORT).show();
         if (getArguments() != null) {
             String taskType = getArguments().getString("task_type", "No Task Type");
@@ -83,6 +103,11 @@ public class TasksFragment extends Fragment {
                 taskList = filterTasksByType(taskType,taskList);
             }
             getTodayTasks(taskList,selectedDate);
+            if (todayTasks.size()==0){
+                tv_no_task.setVisibility(View.VISIBLE);
+            }else{
+                tv_no_task.setVisibility(View.GONE);
+            }
 
             tasksAdapter = new TasksAdapter(todayTasks);
             recyclerView.setAdapter(tasksAdapter);
@@ -102,6 +127,17 @@ public class TasksFragment extends Fragment {
             //you have reset date so next time jump to this fragment would be the latest date
             selectedDate = dateFormat.format(new Date());
         });
+
+        // Set the CalendarView to the selected date
+        try {
+            Date calendarDate = dateFormat.parse(selectedDate);
+            if (calendarDate != null) {
+                calendarView.setDate(calendarDate.getTime()); // Set the calendar to the specific date
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Error setting calendar date", Toast.LENGTH_SHORT).show();
+        }
 
         // Listener for calendar date selection
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
