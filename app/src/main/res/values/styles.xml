@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Custom theme for Firebase AuthUI -->
+    <style name="CustomAuthUITheme" parent="Theme.MaterialComponents.Light">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/main_theme</item>
+        <item name="colorPrimaryVariant">@color/main_theme</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Background color -->
+        <item name="android:windowBackground">@color/white</item>
+        <!-- Status bar -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- Action bar -->
+        <item name="actionBarStyle">@style/CustomActionBar</item>
+    </style>
+    <!-- Customize ActionBar style -->
+    <style name="CustomActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="background">@color/main_theme</item>
+    </style>
+</resources>
