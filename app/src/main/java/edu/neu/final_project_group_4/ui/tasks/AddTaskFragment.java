@@ -244,7 +244,7 @@ public class AddTaskFragment extends Fragment {
             String buttonText = button.getText().toString(); // Get button text
             if (buttonText.equalsIgnoreCase(taskType)) {
                 // Set the color to selected for the matching button
-                button.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.btn_selected));
+                button.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.btn_unselected));
                 type = task.getType();
             }
         }
@@ -373,14 +373,13 @@ public class AddTaskFragment extends Fragment {
 
     // the below is handle the click activity for 5 button
     private void handleButtonClick(Button selectedButton) {
-        // Reset all buttons to their original styles
+        // Reset all buttons to gray
         for (Button button : buttons) {
-            int colorResId = buttonColors.get(button);
-            button.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), colorResId));;
+            button.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.btn_unselected));;
         }
 
-        // selected button become gray
-        selectedButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.btn_selected));
+        // selected button become its designated style
+        selectedButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), buttonColors.get(selectedButton)));
         type = selectedButton.getText().toString();
     }
 

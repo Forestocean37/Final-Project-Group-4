@@ -95,23 +95,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:backgroundTint="@color/personal_task"
-                    android:text="Personal" />
+                    android:backgroundTint="@color/btn_unselected"
+                    android:text="Personal"
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/btnFree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:backgroundTint="#FF6D6D"
-                    android:text="Free" />
+                    android:backgroundTint="@color/btn_unselected"
+                    android:text="Free"
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/btnSocial"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/social_task"
-                    android:text="Social" />
+                    android:backgroundTint="@color/btn_unselected"
+                    android:text="Social"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <!-- Second Row with 2 Buttons -->
@@ -128,17 +131,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#FFD382"
+                    android:backgroundTint="@color/btn_unselected"
                     android:text="Work"
-                    android:textColor="#000000" />
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/btnTodoList"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:backgroundTint="#8895FF"
-                    android:text="To do list" />
+                    android:backgroundTint="@color/btn_unselected"
+                    android:text="To do list"
+                    android:textColor="@color/black" />
             </LinearLayout>
         </LinearLayout>
 
