@@ -1,7 +1,10 @@
 package edu.neu.final_project_group_4;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -38,35 +41,51 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        startSignInFlow();
+        String link = catchSignInLink();
+        startSignInFlow(link);
     }
 
-    private void startSignInFlow() {
+    private void startSignInFlow(String link) {
         ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
                 .setAndroidPackageName(
                         "edu.neu.final_project_group_4",
                         true,
                         "28")
                 .setHandleCodeInApp(true)
-                .setUrl("https://finalprojectgroup4.page.link")
+                .setUrl("https://finalprojectgroup4.page.link/sign-up-sign-in")
                 .build();
 
         List<AuthUI.IdpConfig> providers = Arrays.asList(
-                //new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.EmailBuilder()
-                        //.enableEmailLinkSignIn()
-                        //.setActionCodeSettings(actionCodeSettings)
+                        .enableEmailLinkSignIn()
+                        .setActionCodeSettings(actionCodeSettings)
                         .build()
         );
 
-        Intent signInIntent = AuthUI.getInstance()
+        AuthUI.SignInIntentBuilder builder = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .setLogo(R.drawable.ic_logo)
-                .setTheme(R.style.CustomAuthUITheme)
-                .build();
+                .setTheme(R.style.CustomAuthUITheme);
 
-        signInLauncher.launch(signInIntent);
+        if (link != null) {
+            builder.setEmailLink(link);
+        }
+
+        signInLauncher.launch(builder.build());
+    }
+
+    private String catchSignInLink() {
+        if (AuthUI.canHandleIntent(getIntent())) {
+            Uri link = getIntent().getData();
+            if (link != null) {
+                Toast.makeText(LoginActivity.this, "Signing in with email link",
+                        Toast.LENGTH_SHORT).show();
+                Log.d("Login", "Email Link: " + link);
+                return link.toString();
+            }
+        }
+        return null;
     }
 
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {

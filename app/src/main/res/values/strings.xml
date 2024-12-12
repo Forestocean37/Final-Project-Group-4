@@ -15,6 +15,6 @@
     <string name="home_text_schedule_1">Your Schedule</string>
     <string name="home_text_schedule_2">Upcoming schedule and task</string>
     <!-- Login Page, Overriding AuthUI -->
-    <string name="fui_sign_in_default">Sign Up/Sign In With Email</string>
+    <string name="fui_sign_in_default">Sign Up/Sign In With a Magic Link</string>
     <string name="fui_email_hint">Enter your email</string>
 </resources>
