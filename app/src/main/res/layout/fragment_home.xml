@@ -109,7 +109,7 @@
         android:textSize="26sp"
         android:textColor="@color/black"
         android:layout_marginHorizontal="12dp"
-        app:layout_constraintBottom_toTopOf="@id/button_personal"
+        app:layout_constraintBottom_toTopOf="@id/list_buttons"
         app:layout_constraintStart_toStartOf="@id/guideline_boarder_left"
         app:layout_constraintTop_toTopOf="@id/guideline_dividing_2" />
 
@@ -154,13 +154,13 @@
 <!--        app:layout_constraintStart_toEndOf="@id/button_personal"-->
 <!--        app:layout_constraintTop_toBottomOf="@id/text_options" />-->
     <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:id="@+id/list_buttons"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@id/guideline_dividing_3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline_boarder_right"
+        app:layout_constraintStart_toStartOf="@id/guideline_boarder_left"
         app:layout_constraintTop_toBottomOf="@+id/text_options">
 
         <LinearLayout
