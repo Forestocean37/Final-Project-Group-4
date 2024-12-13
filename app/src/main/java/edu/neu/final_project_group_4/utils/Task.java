@@ -110,12 +110,17 @@ public class Task {
         return LocalDateTime.parse(time, formatter);
     }
 
-    private boolean isSameDay(String t1, String t2) {
+    public boolean isSameDay(String t1, String t2) {
         return t1.split(" ")[0].equals(t2.split(" ")[0]);
     }
 
-    private boolean isSameDay(LocalDateTime t1, LocalDateTime t2) {
+    public boolean isSameDay(LocalDateTime t1, LocalDateTime t2) {
         return t1.toLocalDate().equals(t2.toLocalDate());
+    }
+
+    public boolean isSameMonth(LocalDateTime t1, LocalDateTime t2) {
+        return t1.getYear() == t2.getYear() &&
+                t1.getMonth() == t2.getMonth();
     }
 
     public TaskModel getNextTask() {
