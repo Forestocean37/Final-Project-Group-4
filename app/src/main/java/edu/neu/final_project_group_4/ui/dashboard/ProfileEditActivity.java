@@ -80,24 +80,27 @@ public class ProfileEditActivity extends AppCompatActivity {
         saveButton.setOnClickListener(view -> {
             String newFullName = userFullName.getText().toString();
             user.updateFullName(newFullName);
+            User.getInstance().setLocalUserFullName(newFullName);
 
             String newDescription = descriptionBox.getText().toString();
             user.editDescription(newDescription);
+            User.getInstance().setLocalUserDescription(newDescription);
 
             if (selectedImageUri != null) {
                 user.updateProfilePhoto(selectedImageUri);
+                User.getInstance().setLocalProfilePhotoUri(selectedImageUri);
                 Log.d("ProfileEdit", "Photo Url: " + selectedImageUri.toString());
             }
 
             Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-            whenFinish();
+            saveAndFinish();
         });
 
         // Cancel without saving
         cancelButton.setOnClickListener(view -> finish());
     }
 
-    private void whenFinish() {
+    private void saveAndFinish() {
         User.getInstance().fetchUserDescription();
 
         // Set result for returning to ProfileActivity

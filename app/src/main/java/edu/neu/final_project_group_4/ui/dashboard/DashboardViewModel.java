@@ -27,7 +27,13 @@ public class DashboardViewModel extends ViewModel {
     }
 
     public void loadUserFullName() {
-        userFullName.setValue(User.getInstance().getFullName());
+        String localValue = User.getInstance().getLocalUserFullName();
+        if (!localValue.isEmpty()) {
+            userFullName.setValue(localValue);
+            User.getInstance().clearLocalUserFullName();
+        } else {
+            userFullName.setValue(User.getInstance().getFullName());
+        }
     }
 
     public LiveData<String> getUserFullName() {
@@ -54,7 +60,14 @@ public class DashboardViewModel extends ViewModel {
         if (needFetch) {
             User.getInstance().fetchUserDescription();
         }
-        userDescription.setValue(User.getInstance().getUserDescription());
+
+        String localValue = User.getInstance().getLocalUserDescription();
+        if (!localValue.isEmpty()) {
+            userDescription.setValue(localValue);
+            User.getInstance().clearLocalUserDescription();
+        } else {
+            userDescription.setValue(User.getInstance().getUserDescription());
+        }
     }
 
     public LiveData<String> getUserDescription() {
