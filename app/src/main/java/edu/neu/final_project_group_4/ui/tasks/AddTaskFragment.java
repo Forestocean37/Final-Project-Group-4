@@ -121,6 +121,9 @@ public class AddTaskFragment extends Fragment {
         teamInputEditText = root.findViewById(R.id.team_input_edit_text);
         teamInputLayout  = root.findViewById(R.id.team_input_layout);
 
+        // Set current user as default first member
+        teamInputEditText.setText(User.getInstance().getFullName());
+
         // Set a meaningful tag for the initial TextInputLayout
         teamInputLayout.setTag("team_member_info_" + memberCounter);
         memberCounter++;
