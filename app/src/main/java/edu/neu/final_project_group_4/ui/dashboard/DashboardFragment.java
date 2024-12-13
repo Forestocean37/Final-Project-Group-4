@@ -65,10 +65,22 @@ public class DashboardFragment extends Fragment {
                 name::setText);
         dashboardViewModel.loadUserFullName();
 
+        // User email
+        final TextView email = binding.profileUserEmail;
+        dashboardViewModel.getUserEmail().observe(getViewLifecycleOwner(),
+                email::setText);
+        dashboardViewModel.loadUserEmail();
+
         // Photo
         final ImageView photo = binding.profileImage;
         Uri photoUrl = User.getInstance().getPhotoUrl();
         loadProfilePhoto(photoUrl, photo);
+
+        // Remained tasks in current month
+        final TextView taskCount = binding.monthRemainingTasks;
+        dashboardViewModel.getMonthRemainedTasks().observe(getViewLifecycleOwner(),
+                taskCount::setText);
+        dashboardViewModel.loadRemainedTasks();
 
         // User description
         final TextView description = binding.descriptionText;
