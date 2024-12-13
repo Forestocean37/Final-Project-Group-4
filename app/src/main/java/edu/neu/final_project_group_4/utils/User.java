@@ -19,6 +19,10 @@ public class User {
     private FirebaseFirestore db;
     private String userDescription = "Your description is empty...";
 
+    private String localUserFullName = "";
+    private Uri localProfilePhotoUri = null;
+    private String localUserDescription = "";
+
     private static class Instance {
         private static final User _instance = new User();
     }
@@ -142,5 +146,41 @@ public class User {
                     .addOnSuccessListener(unused -> Log.d("User", "User description added successfully"))
                     .addOnFailureListener(e -> Log.d("User", "Error adding user description", e));
         }
+    }
+
+    public String getLocalUserFullName() {
+        return localUserFullName;
+    }
+
+    public void setLocalUserFullName(String localUserFullName) {
+        this.localUserFullName = localUserFullName;
+    }
+
+    public void clearLocalUserFullName() {
+        this.localUserFullName = "";
+    }
+
+    public Uri getLocalProfilePhotoUri() {
+        return localProfilePhotoUri;
+    }
+
+    public void setLocalProfilePhotoUri(Uri localProfilePhotoUri) {
+        this.localProfilePhotoUri = localProfilePhotoUri;
+    }
+
+    public void clearLocalProfilePhotoUri() {
+        this.localProfilePhotoUri = null;
+    }
+
+    public String getLocalUserDescription() {
+        return localUserDescription;
+    }
+
+    public void setLocalUserDescription(String tempDescription) {
+        this.localUserDescription = tempDescription;
+    }
+
+    public void clearLocalUserDescription() {
+        this.localUserDescription = "";
     }
 }

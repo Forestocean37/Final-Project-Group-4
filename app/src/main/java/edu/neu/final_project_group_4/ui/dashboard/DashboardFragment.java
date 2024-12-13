@@ -107,6 +107,26 @@ public class DashboardFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        dashboardViewModel.loadUserFullName();
+        loadDescription(true);
+
+        // Photo
+        final ImageView photo = binding.profileImage;
+        Uri localPhotoUri = User.getInstance().getLocalProfilePhotoUri();
+        if (localPhotoUri != null) {
+            loadProfilePhoto(localPhotoUri, photo);
+            User.getInstance().clearLocalProfilePhotoUri();
+        } else {
+            Uri photoUrl = User.getInstance().getPhotoUrl();
+            loadProfilePhoto(photoUrl, photo);
+        }
+
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
