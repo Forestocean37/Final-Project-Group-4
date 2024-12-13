@@ -1,3 +1,7 @@
+**IMPORTANT**
+
+Please use the built & signed APK in the [release](https://github.com/swqa7697/Final-Project-Group-4/releases/tag/APK3) section to test/grade, since a release sign is required for our latest sign up/sign in method.
+
 **WELCOME PAGE**
 
 ![image](https://github.com/user-attachments/assets/a0a19a34-09d9-47c1-8cb7-c683e7bf17ed)
